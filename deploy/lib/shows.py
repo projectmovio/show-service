@@ -19,8 +19,8 @@ BUILD_FOLDER = os.path.join(CURRENT_DIR, "..", "..", "build")
 
 
 class Shows(core.Stack):
-
-    def __init__(self, app: core.App, id: str, domain_name: str, **kwargs) -> None:
+    def __init__(self, app: core.App, id: str, domain_name: str,
+                 **kwargs) -> None:
         super().__init__(app, id, **kwargs)
         self.domain_name = domain_name
         self.layers = {}

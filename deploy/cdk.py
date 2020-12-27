@@ -1,7 +1,6 @@
 import os
 
 from aws_cdk import core
-
 from lib.shows import Shows
 
 app = core.App()
