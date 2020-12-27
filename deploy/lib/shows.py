@@ -49,7 +49,7 @@ class Shows(core.Stack):
             "api-show_by_id": {
                 "layers": ["utils", "databases"],
                 "variables": {
-                    "SHOW_DATABASE_NAME": self.show_table.table_name,
+                    "SHOW_DATABASE_NAME": self.shows_table.table_name,
                     "LOG_LEVEL": "INFO",
                 },
                 "concurrent_executions": 100,
@@ -65,14 +65,14 @@ class Shows(core.Stack):
             "api-show": {
                 "layers": ["utils", "databases", "api"],
                 "variables": {
-                    "SHOW_DATABASE_NAME": self.show_table.table_name,
+                    "SHOW_DATABASE_NAME": self.shows_table.table_name,
                     "LOG_LEVEL": "INFO",
                 },
                 "concurrent_executions": 100,
                 "policies": [
                     PolicyStatement(
                         actions=["dynamodb:Query"],
-                        resources=[f"{self.show_table.table_arn}/index/tvmaze_id"]
+                        resources=[f"{self.shows_table.table_arn}/index/tvmaze_id"]
                     ),
                 ],
                 "timeout": 10,
@@ -96,7 +96,6 @@ class Shows(core.Stack):
                 packages_folder = os.path.join(build_folder, "python", "lib", "python3.8", "site-packages")
                 # print(f"Installing layer requirements to target: {os.path.abspath(packages_folder)}")
                 subprocess.check_output(["pip", "install", "-r", requirements_path, "-t", packages_folder])
-                clean_pycache()
 
             self.layers[layer] = LayerVersion(
                 self,
@@ -107,8 +106,6 @@ class Shows(core.Stack):
             )
 
     def _create_lambdas(self):
-        clean_pycache()
-
         for root, dirs, files in os.walk(LAMBDAS_DIR):
             for _ in files:
                 parent_folder = os.path.basename(os.path.dirname(root))
