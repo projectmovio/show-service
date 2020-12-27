@@ -177,11 +177,6 @@ class Shows(core.Stack):
                 "route": "/v1/show",
                 "target_lambda": self.lambdas["api-show"]
             },
-            "get_show_by_id": {
-                "method": "GET",
-                "route": "/v1/show/{id}",
-                "target_lambda": self.lambdas["api-show_by_id"]
-            },
         }
 
         for r in routes:
