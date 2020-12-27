@@ -63,7 +63,7 @@ class Shows(core.Stack):
                 "memory": 128
             },
             "api-show": {
-                "layers": ["utils", "databases", "api"],
+                "layers": ["utils", "databases"],
                 "variables": {
                     "SHOW_DATABASE_NAME": self.shows_table.table_name,
                     "LOG_LEVEL": "INFO",
