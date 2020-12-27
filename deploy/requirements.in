@@ -1,0 +1,10 @@
+aws-cdk.core==1.50.0
+aws_cdk.aws_lambda==1.50.0
+aws_cdk.aws_dynamodb==1.50.0
+aws_cdk.aws_iam==1.50.0
+aws_cdk.aws_s3==1.50.0
+aws-cdk.aws-apigateway==1.50.0
+aws_cdk.aws_apigatewayv2==1.50.0
+aws_cdk.aws_certificatemanager==1.50.0
+
+wheel

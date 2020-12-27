@@ -1,3 +1,7 @@
-# Running in docker
-* `docker build -t show-service:latest .`
-* `docker run -it -p 8000:8000 show-service:latest`
+[![Coverage Status](https://coveralls.io/repos/github/projectmovio/show-service/badge.svg?branch=master)](https://coveralls.io/github/projectmovio/show-service?branch=master)
+![dryrun](https://github.com/projectmovio/show-service/workflows/dryrun/badge.svg)
+![test](https://github.com/projectmovio/show-service/workflows/test/badge.svg)
+
+# Testing
+
+* `make test`
