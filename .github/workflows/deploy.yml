@@ -1,0 +1,26 @@
+name: deploy
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: cdk deploy
+        uses: youyo/aws-cdk-github-actions@v1.1.10
+        with:
+          cdk_stack: show
+          cdk_version: 1.50.0
+          cdk_subcommand: deploy
+          debug_log: true
+          working_dir: deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-1
+          PIP_NO_CACHE_DIR: off
