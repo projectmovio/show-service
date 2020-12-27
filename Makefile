@@ -1,9 +1,3 @@
-.PHONY: format
-format:
-	pip install yapf isort
-	find . -name '*.py' -exec yapf -i -vv {} \+
-	isort -rc .
-
 .PHONE: generate-hashes
 generate-hashes:
 	pip install pip-tools
