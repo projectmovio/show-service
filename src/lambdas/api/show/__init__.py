@@ -46,15 +46,6 @@ def _post_show(tvmaze_id, body):
         }
 
     try:
-        body = json.loads(body)
-    except (TypeError, JSONDecodeError):
-        log.debug(f"Invalid body: {body}")
-        return {
-            "statusCode": 400,
-            "body": "Invalid post body"
-        }
-
-    try:
         show_db.get_show_by_tvmaze_id(int(tvmaze_id))
     except show_db.NotFoundError:
         pass
@@ -62,6 +53,15 @@ def _post_show(tvmaze_id, body):
         return {
             "statusCode": 200,
             "body": json.dumps({"show_id": show_db.create_show_uuid(tvmaze_id)})
+        }
+
+    try:
+        body = json.loads(body)
+    except (TypeError, JSONDecodeError):
+        log.debug(f"Invalid body: {body}")
+        return {
+            "statusCode": 400,
+            "body": "Invalid post body"
         }
 
     show_db.new_show(body)
