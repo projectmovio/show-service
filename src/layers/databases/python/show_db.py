@@ -2,6 +2,7 @@ import os
 import uuid
 
 import boto3
+from boto3.dynamodb.conditions import Key
 from dynamodb_json import json_util
 
 import logger
@@ -74,6 +75,19 @@ def get_show_by_id(show_id):
         raise NotFoundError(f"Show with id: {show_id} not found")
 
     return res["Item"]
+
+
+def get_show_by_tvmaze_id(tvmaze_id):
+    res = _get_table().query(
+        IndexName="tvmaze_id",
+        KeyConditionExpression=Key("tvmaze_id").eq(tvmaze_id)
+    )
+    log.debug(f"get_show_by_tvmaze_id res: {res}")
+
+    if not res["Items"]:
+        raise NotFoundError(f"Anime with mal_id: {tvmaze_id} not found")
+
+    return res["Items"][0]
 
 
 def show_by_broadcast_generator(day_of_week, limit=100):

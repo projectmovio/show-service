@@ -1,11 +1,8 @@
 import json
-import os
+from json import JSONDecodeError
 
-import anime_db
-import boto3
-import decimal_encoder
 import logger
-import mal
+import show_db
 
 sqs_queue = None
 
@@ -32,82 +29,44 @@ def handle(event, context):
             "body": json.dumps({"error": "Please specify query parameters"})
         }
 
-    mal_id = query_params.get("mal_id")
-    search = query_params.get("search")
+    tvmaze_id = query_params.get("tvmaze_id")
 
     if method == "POST":
-        return _post_anime(mal_id)
-    elif method == "GET":
-        return _search_anime(mal_id, search)
+        body = event.get("body")
+        return _post_show(tvmaze_id, body)
     else:
         raise UnsupportedMethod()
 
 
-def _post_anime(mal_id):
-    if mal_id is None:
+def _post_show(tvmaze_id, body):
+    if tvmaze_id is None:
         return {
-            "statusCode":
-            400,
-            "body":
-            json.dumps(
-                {"error": "Please specify the 'mal_id' query parameter"})
+            "statusCode": 400,
+            "body": json.dumps({"error": "Please specify the 'tvmaze_id' query parameter"})
         }
 
     try:
-        anime_db.get_anime_by_mal_id(int(mal_id))
-    except anime_db.NotFoundError:
+        body = json.loads(body)
+    except (TypeError, JSONDecodeError):
+        log.debug(f"Invalid body: {body}")
+        return {
+            "statusCode": 400,
+            "body": "Invalid post body"
+        }
+
+    try:
+        show_db.get_show_by_tvmaze_id(int(tvmaze_id))
+    except show_db.NotFoundError:
         pass
     else:
         return {
-            "statusCode": 202,
-            "body":
-            json.dumps({"anime_id": anime_db.create_anime_uuid(mal_id)})
+            "statusCode": 200,
+            "body": json.dumps({"show_id": show_db.create_show_uuid(tvmaze_id)})
         }
 
-    _get_sqs_queue().send_message(MessageBody=json.dumps({"mal_id": mal_id}))
+    show_db.new_show(body)
 
     return {
-        "statusCode": 202,
-        "body": json.dumps({"anime_id": anime_db.create_anime_uuid(mal_id)})
+        "statusCode": 200,
+        "body": json.dumps({"show_id": show_db.create_show_uuid(tvmaze_id)})
     }
-
-
-def _search_anime(mal_id, search):
-    if search is None and mal_id is None:
-        return {
-            "statusCode":
-            400,
-            "body":
-            json.dumps({
-                "error":
-                "Please specify either 'search' or 'mal_id' query parameter"
-            })
-        }
-
-    if mal_id:
-        try:
-            res = anime_db.get_anime_by_mal_id(int(mal_id))
-        except anime_db.NotFoundError:
-            log.debug(f"Anime with mal_id: {mal_id} not found in DB, use API")
-        else:
-            return {
-                "statusCode": 200,
-                "body": json.dumps(res, cls=decimal_encoder.DecimalEncoder)
-            }
-
-        try:
-            res = mal.MalApi().get_anime(mal_id)
-        except mal.NotFoundError:
-            return {"statusCode": 404}
-        except mal.HTTPError:
-            return {"statusCode": 503}
-        else:
-            return {"statusCode": 200, "body": json.dumps(res)}
-    elif search:
-        try:
-            res = mal.MalApi().search(search)
-            id_map = anime_db.get_ids(res["items"])
-            res["id_map"] = id_map
-        except mal.HTTPError as e:
-            return {"statusCode": 503, "body": str(e)}
-        return {"statusCode": 200, "body": json.dumps(res)}
