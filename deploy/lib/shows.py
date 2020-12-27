@@ -46,22 +46,6 @@ class Shows(core.Stack):
 
     def _create_lambdas_config(self):
         self.lambdas_config = {
-            "api-show_by_id": {
-                "layers": ["utils", "databases"],
-                "variables": {
-                    "SHOW_DATABASE_NAME": self.shows_table.table_name,
-                    "LOG_LEVEL": "INFO",
-                },
-                "concurrent_executions": 100,
-                "policies": [
-                    PolicyStatement(
-                        actions=["dynamodb:GetItem"],
-                        resources=[self.shows_table.table_arn]
-                    )
-                ],
-                "timeout": 3,
-                "memory": 128
-            },
             "api-show": {
                 "layers": ["utils", "databases"],
                 "variables": {
