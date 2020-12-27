@@ -15,7 +15,7 @@ jobs:
       - name: cdk diff
         uses: youyo/aws-cdk-github-actions@v1.1.10
         with:
-          cdk_stack: show
+          cdk_stack: shows
           cdk_version: 1.50.0
           cdk_subcommand: diff
           debug_log: true
@@ -31,7 +31,7 @@ jobs:
       - name: cdk synth
         uses: youyo/aws-cdk-github-actions@v1.1.10
         with:
-          cdk_stack: show
+          cdk_stack: shows
           cdk_version: 1.50.0
           cdk_subcommand: synth
           debug_log: true

@@ -14,7 +14,7 @@ jobs:
       - name: cdk deploy
         uses: youyo/aws-cdk-github-actions@v1.1.10
         with:
-          cdk_stack: show
+          cdk_stack: shows
           cdk_version: 1.50.0
           cdk_subcommand: deploy
           debug_log: true
