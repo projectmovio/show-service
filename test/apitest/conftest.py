@@ -1,6 +1,6 @@
 import os
 
-API_URL = os.getenv("API_URL")
+API_URL = "api.shows.moshan.tv"
 BASE_HEADERS = {
     "Authorization": os.getenv("TOKEN")
 }
