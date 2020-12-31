@@ -12,7 +12,7 @@ from aws_cdk.aws_iam import Role, ServicePrincipal, PolicyStatement, ManagedPoli
 from aws_cdk.aws_lambda import LayerVersion, Code, Runtime, Function
 from aws_cdk.core import Duration
 
-from utils import clean_pycache
+from lib.utils import clean_pycache
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 LAMBDAS_DIR = os.path.join(CURRENT_DIR, "..", "..", "src", "lambdas")
