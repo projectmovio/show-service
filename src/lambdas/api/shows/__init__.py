@@ -2,7 +2,7 @@ import json
 from json import JSONDecodeError
 
 import logger
-import show_db
+import shows_db
 
 sqs_queue = None
 
@@ -46,13 +46,13 @@ def _post_show(tvmaze_id, body):
         }
 
     try:
-        show_db.get_show_by_tvmaze_id(int(tvmaze_id))
-    except show_db.NotFoundError:
+        shows_db.get_show_by_tvmaze_id(int(tvmaze_id))
+    except shows_db.NotFoundError:
         pass
     else:
         return {
             "statusCode": 200,
-            "body": json.dumps({"show_id": show_db.create_show_uuid(tvmaze_id)})
+            "body": json.dumps({"show_id": shows_db.create_show_uuid(tvmaze_id)})
         }
 
     try:
@@ -64,9 +64,9 @@ def _post_show(tvmaze_id, body):
             "body": "Invalid post body"
         }
 
-    show_db.new_show(body)
+    shows_db.new_show(body)
 
     return {
         "statusCode": 200,
-        "body": json.dumps({"show_id": show_db.create_show_uuid(tvmaze_id)})
+        "body": json.dumps({"show_id": shows_db.create_show_uuid(tvmaze_id)})
     }

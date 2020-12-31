@@ -6,10 +6,10 @@ os.environ["LOG_LEVEL"] = "DEBUG"
 
 
 @pytest.fixture(scope='function')
-def mocked_show_db():
-    import show_db
+def mocked_shows_db():
+    import shows_db
 
-    show_db.table = MagicMock()
-    show_db.client = MagicMock()
+    shows_db.table = MagicMock()
+    shows_db.client = MagicMock()
 
-    return show_db
+    return shows_db

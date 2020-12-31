@@ -7,7 +7,7 @@ app = core.App()
 
 env = {"region": "eu-west-1"}
 
-domain_name = "api.shows.moshan.tv"
+domain_name = "api.show.moshan.tv"
 
 Shows(app, "shows", domain_name, env=env)
 
