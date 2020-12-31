@@ -1,11 +1,11 @@
 import json
 import pytest
 
-from api.show import handle, UnsupportedMethod
+from api.shows import handle, UnsupportedMethod
 
 
-def test_post_show(mocked_show_db):
-    mocked_show_db.table.query.side_effect = mocked_show_db.NotFoundError
+def test_post_shows(mocked_shows_db):
+    mocked_shows_db.table.query.side_effect = mocked_shows_db.NotFoundError
     event = {
         "requestContext": {
             "http": {
@@ -27,8 +27,8 @@ def test_post_show(mocked_show_db):
     assert res == exp
 
 
-def test_post_show_already_exist(mocked_show_db):
-    mocked_show_db.table.query.return_value = {
+def test_post_shows_already_exist(mocked_shows_db):
+    mocked_shows_db.table.query.return_value = {
         "Items": [
             {
                 "tvmaze_id": "123"
@@ -55,8 +55,8 @@ def test_post_show_already_exist(mocked_show_db):
     assert res == exp
 
 
-def test_post_show_no_query_params(mocked_show_db):
-    mocked_show_db.table.query.return_value = {
+def test_post_shows_no_query_params(mocked_shows_db):
+    mocked_shows_db.table.query.return_value = {
         "Items": [
             {
                 "tvmaze_id": "123"
@@ -85,8 +85,8 @@ def test_post_show_no_query_params(mocked_show_db):
     assert res == exp
 
 
-def test_post_show_invalid_query_params(mocked_show_db):
-    mocked_show_db.table.query.return_value = {
+def test_post_shows_invalid_query_params(mocked_shows_db):
+    mocked_shows_db.table.query.return_value = {
         "Items": [
             {
                 "mal_id": 123

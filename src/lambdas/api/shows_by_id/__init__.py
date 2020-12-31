@@ -1,6 +1,6 @@
 import json
 
-import show_db
+import shows_db
 import decimal_encoder
 import logger
 
@@ -16,7 +16,7 @@ def handle(event, context):
 
     show_id = event["pathParameters"].get("id")
 
-    res = show_db.get_show_by_id(show_id)
+    res = shows_db.get_show_by_id(show_id)
     return {
         "statusCode": 200,
         "body": json.dumps(res, cls=decimal_encoder.DecimalEncoder)

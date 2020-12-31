@@ -48,10 +48,10 @@ class Shows(core.Stack):
 
     def _create_lambdas_config(self):
         self.lambdas_config = {
-            "api-show_by_id": {
+            "api-shows_by_id": {
                 "layers": ["utils", "databases"],
                 "variables": {
-                    "SHOW_DATABASE_NAME": self.shows_table.table_name,
+                    "SHOWS_DATABASE_NAME": self.shows_table.table_name,
                     "LOG_LEVEL": "INFO",
                 },
                 "concurrent_executions": 100,
@@ -64,10 +64,10 @@ class Shows(core.Stack):
                 "timeout": 3,
                 "memory": 128
             },
-            "api-show": {
+            "api-shows": {
                 "layers": ["utils", "databases"],
                 "variables": {
-                    "SHOW_DATABASE_NAME": self.shows_table.table_name,
+                    "SHOWS_DATABASE_NAME": self.shows_table.table_name,
                     "LOG_LEVEL": "INFO",
                 },
                 "concurrent_executions": 100,
@@ -103,7 +103,7 @@ class Shows(core.Stack):
             self.layers[layer] = LayerVersion(
                 self,
                 layer,
-                layer_version_name=f"show-{layer}",
+                layer_version_name=f"shows-{layer}",
                 code=Code.from_asset(path=build_folder),
                 compatible_runtimes=[Runtime.PYTHON_3_8],
             )
@@ -162,7 +162,7 @@ class Shows(core.Stack):
 
         http_api = HttpApi(
             self,
-            "show_gateway",
+            "shows_gateway",
             create_default_stage=False,
             api_name="shows",
             cors_preflight=CorsPreflightOptions(
@@ -186,15 +186,15 @@ class Shows(core.Stack):
         )
 
         routes = {
-            "post_show": {
+            "post_shows": {
                 "method": "POST",
-                "route": "/v1/show",
-                "target_lambda": self.lambdas["api-show"]
+                "route": "/v1/shows",
+                "target_lambda": self.lambdas["api-shows"]
             },
-            "get_show_by_id": {
+            "get_shows_by_id": {
                 "method": "GET",
-                "route": "/v1/show/{id}",
-                "target_lambda": self.lambdas["api-show_by_id"]
+                "route": "/v1/shows/{id}",
+                "target_lambda": self.lambdas["api-shows_by_id"]
             },
         }
 
