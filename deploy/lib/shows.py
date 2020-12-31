@@ -54,7 +54,6 @@ class Shows(core.Stack):
                     "SHOWS_DATABASE_NAME": self.shows_table.table_name,
                     "LOG_LEVEL": "INFO",
                 },
-                "concurrent_executions": 100,
                 "policies": [
                     PolicyStatement(
                         actions=["dynamodb:GetItem"],
@@ -70,7 +69,6 @@ class Shows(core.Stack):
                     "SHOWS_DATABASE_NAME": self.shows_table.table_name,
                     "LOG_LEVEL": "INFO",
                 },
-                "concurrent_executions": 100,
                 "policies": [
                     PolicyStatement(
                         actions=["dynamodb:Query"],
@@ -139,7 +137,6 @@ class Shows(core.Stack):
                     layers=layers,
                     function_name=name,
                     environment=lambda_config["variables"],
-                    reserved_concurrent_executions=lambda_config["concurrent_executions"],
                     role=lambda_role,
                     timeout=Duration.seconds(lambda_config["timeout"]),
                     memory_size=lambda_config["memory"]
