@@ -183,11 +183,6 @@ class Shows(core.Stack):
         )
 
         routes = {
-            "get_show": {
-                "method": "GET",
-                "route": "/v1/show",
-                "target_lambda": self.lambdas["api-show"]
-            },
             "post_show": {
                 "method": "POST",
                 "route": "/v1/show",
