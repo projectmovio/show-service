@@ -12,6 +12,8 @@ from aws_cdk.aws_iam import Role, ServicePrincipal, PolicyStatement, ManagedPoli
 from aws_cdk.aws_lambda import LayerVersion, Code, Runtime, Function
 from aws_cdk.core import Duration
 
+from lib.utils import clean_pycache
+
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 LAMBDAS_DIR = os.path.join(CURRENT_DIR, "..", "..", "src", "lambdas")
 LAYERS_DIR = os.path.join(CURRENT_DIR, "..", "..", "src", "layers")
@@ -96,6 +98,7 @@ class Shows(core.Stack):
                 packages_folder = os.path.join(build_folder, "python", "lib", "python3.8", "site-packages")
                 # print(f"Installing layer requirements to target: {os.path.abspath(packages_folder)}")
                 subprocess.check_output(["pip", "install", "-r", requirements_path, "-t", packages_folder])
+                clean_pycache()
 
             self.layers[layer] = LayerVersion(
                 self,
@@ -183,11 +186,6 @@ class Shows(core.Stack):
         )
 
         routes = {
-            "get_show": {
-                "method": "GET",
-                "route": "/v1/show",
-                "target_lambda": self.lambdas["api-show"]
-            },
             "post_show": {
                 "method": "POST",
                 "route": "/v1/show",
