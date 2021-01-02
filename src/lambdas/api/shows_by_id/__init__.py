@@ -16,7 +16,11 @@ def handle(event, context):
 
     show_id = event["pathParameters"].get("id")
 
-    res = shows_db.get_show_by_id(show_id)
+    try:
+        res = shows_db.get_show_by_id(show_id)
+    except shows_db.NotFoundError:
+        return {"statusCode": 404}
+
     return {
         "statusCode": 200,
         "body": json.dumps(res, cls=decimal_encoder.DecimalEncoder)
