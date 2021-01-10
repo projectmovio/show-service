@@ -12,16 +12,13 @@ def test_post_shows(mocked_shows_db):
                 "method": "POST"
             }
         },
-        "queryStringParameters": {
-            "tvmaze_id": "123"
-        },
-        "body": '{"id": "123","image": "img"}'
+        "body": '{"api_id": "123", "api_name": "tvmaze"}'
     }
 
     res = handle(event, None)
 
     exp = {
-        "body": json.dumps({"show_id": "5598aa78-0a11-5849-a708-6a34131c56d7"}),
+        "body": json.dumps({"id": "cf1ffb71-48c3-53c0-9966-900cc5e5553e"}),
         "statusCode": 200
     }
     assert res == exp
@@ -41,21 +38,19 @@ def test_post_shows_already_exist(mocked_shows_db):
                 "method": "POST"
             }
         },
-        "queryStringParameters": {
-            "tvmaze_id": "123"
-        }
+        "body": '{"api_id": "123", "api_name": "tvmaze"}'
     }
 
     res = handle(event, None)
 
     exp = {
-        "body": json.dumps({"show_id": "5598aa78-0a11-5849-a708-6a34131c56d7"}),
+        "body": json.dumps({"id": "cf1ffb71-48c3-53c0-9966-900cc5e5553e"}),
         "statusCode": 200
     }
     assert res == exp
 
 
-def test_post_shows_no_query_params(mocked_shows_db):
+def test_post_shows_no_body(mocked_shows_db):
     mocked_shows_db.table.query.return_value = {
         "Items": [
             {
@@ -69,23 +64,18 @@ def test_post_shows_no_query_params(mocked_shows_db):
                 "method": "POST"
             }
         },
-        "queryStringParameters": {
-
-        }
     }
 
     res = handle(event, None)
 
     exp = {
         "statusCode": 400,
-        "body": json.dumps({
-            "error": "Please specify query parameters"
-        })
+        "body": "Invalid post body"
     }
     assert res == exp
 
 
-def test_post_shows_invalid_query_params(mocked_shows_db):
+def test_post_shows_invalid_body(mocked_shows_db):
     mocked_shows_db.table.query.return_value = {
         "Items": [
             {
@@ -99,18 +89,15 @@ def test_post_shows_invalid_query_params(mocked_shows_db):
                 "method": "POST"
             }
         },
-        "queryStringParameters": {
-            "aa": "123"
-        }
+        "body": '{"aa": "bb"}'
     }
 
     res = handle(event, None)
 
     exp = {
-        "statusCode": 400,
-        "body": json.dumps({
-            "error": "Please specify the 'tvmaze_id' query parameter"
-        })
+        'body': '{"message": "Invalid post schema", '
+                '"error": "Additional properties are not allowed (\'aa\' was unexpected)"}',
+        'statusCode': 400
     }
     assert res == exp
 

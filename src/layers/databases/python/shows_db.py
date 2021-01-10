@@ -38,15 +38,17 @@ def _get_client():
     return client
 
 
-def new_show(show_info):
-    show_id = create_show_uuid(show_info["id"])
-    update_show(show_id, show_info)
+def new_show(api_name, api_id):
+    show_id = create_show_uuid(api_name, api_id)
+    update_show(show_id, {f"{api_name}_id": api_id})
 
     return show_id
 
 
-def create_show_uuid(tvmaze_id):
-    return str(uuid.uuid5(SHOW_UUID_NAMESPACE, str(tvmaze_id)))
+def create_show_uuid(api_name, api_id):
+    api_uuid = uuid.uuid5(SHOW_UUID_NAMESPACE, api_name)
+    item_uuid = str(uuid.uuid5(api_uuid, api_id))
+    return item_uuid
 
 
 def update_show(show_id, data):
