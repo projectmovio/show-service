@@ -68,7 +68,7 @@ def _post_tvmaze(tvmaze_id):
             "body": json.dumps({"id": shows_db.create_show_uuid("tvmaze", tvmaze_id)})
         }
 
-    shows_db.new_show("tvmaze", tvmaze_id)
+    shows_db.new_show("tvmaze", int(tvmaze_id))
 
     return {
         "statusCode": 200,
