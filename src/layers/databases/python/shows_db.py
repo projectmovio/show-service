@@ -79,15 +79,16 @@ def get_show_by_id(show_id):
     return res["Item"]
 
 
-def get_show_by_tvmaze_id(tvmaze_id):
+def get_show_by_api_id(api_name, api_id):
+    key_name = f"{api_name}_id"
     res = _get_table().query(
-        IndexName="tvmaze_id",
-        KeyConditionExpression=Key("tvmaze_id").eq(tvmaze_id)
+        IndexName=key_name,
+        KeyConditionExpression=Key(key_name).eq(api_id)
     )
-    log.debug(f"get_show_by_tvmaze_id res: {res}")
+    log.debug(f"get_show_by_api_id res: {res}")
 
     if not res["Items"]:
-        raise NotFoundError(f"Anime with mal_id: {tvmaze_id} not found")
+        raise NotFoundError(f"Show with {key_name}: {api_id} not found")
 
     return res["Items"][0]
 
