@@ -74,6 +74,10 @@ class Shows(core.Stack):
                         actions=["dynamodb:Query"],
                         resources=[f"{self.shows_table.table_arn}/index/tvmaze_id"]
                     ),
+                    PolicyStatement(
+                        actions=["dynamodb:UpdateItem"],
+                        resources=[self.shows_table.table_arn]
+                    ),
                 ],
                 "timeout": 10,
                 "memory": 128
