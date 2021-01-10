@@ -39,7 +39,7 @@ def _get_client():
 
 
 def new_show(api_name, api_id):
-    show_id = create_show_uuid(api_name, api_id)
+    show_id = create_show_uuid(api_name, str(api_id))
     update_show(show_id, {f"{api_name}_id": api_id})
 
     return show_id
