@@ -2,6 +2,7 @@ import json
 import os
 from json import JSONDecodeError
 
+import decimal_encoder
 import logger
 import schema
 import shows_db
@@ -30,6 +31,9 @@ def handle(event, context):
     if method == "POST":
         body = event.get("body")
         return _post_show(body)
+    elif method == "GET":
+        query_params = event.get("queryStringParameters")
+        return _get_show_by_api_id(query_params)
     else:
         raise UnsupportedMethod()
 
@@ -55,7 +59,7 @@ def _post_show(body):
 
 def _post_tvmaze(tvmaze_id):
     try:
-        shows_db.get_show_by_tvmaze_id(int(tvmaze_id))
+        shows_db.get_show_by_api_id("tvmaze", int(tvmaze_id))
     except shows_db.NotFoundError:
         pass
     else:
@@ -70,3 +74,20 @@ def _post_tvmaze(tvmaze_id):
         "statusCode": 200,
         "body": json.dumps({"id": shows_db.create_show_uuid("tvmaze", tvmaze_id)})
     }
+
+
+def _get_show_by_api_id(query_params):
+    if not query_params:
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"error": "Please specify query parameters"})
+        }
+
+    if "tvmaze_id" in query_params:
+        try:
+            res = shows_db.get_show_by_api_id("tvmaze", int(query_params["tvmaze_id"]))
+            return {"statusCode": 200, "body": json.dumps(res, cls=decimal_encoder.DecimalEncoder)}
+        except shows_db.NotFoundError:
+            return {"statusCode": 404}
+    else:
+        return {"statusCode": 400, "body": json.dumps({"error": "Unsupported query param"})}

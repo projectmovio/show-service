@@ -116,3 +116,94 @@ def test_unsupported_method():
 
     with pytest.raises(UnsupportedMethod):
         handle(event, None)
+
+
+def test_get_by_api_id(mocked_shows_db):
+    exp_res = {
+        "id": "123"
+    }
+    mocked_shows_db.table.query.return_value = {
+        "Items": [
+            exp_res
+        ]
+    }
+    event = {
+        "requestContext": {
+            "http": {
+                "method": "GET"
+            }
+        },
+        "queryStringParameters": {
+            "tvmaze_id": "123"
+        }
+    }
+
+    res = handle(event, None)
+
+    exp = {
+        "statusCode": 200,
+        "body": json.dumps(exp_res)
+    }
+    assert res == exp
+
+
+def test_get_by_api_id_not_found(mocked_shows_db):
+    mocked_shows_db.table.query.side_effect = mocked_shows_db.NotFoundError
+    event = {
+        "requestContext": {
+            "http": {
+                "method": "GET"
+            }
+        },
+        "queryStringParameters": {
+            "tvmaze_id": "123"
+        }
+    }
+
+    res = handle(event, None)
+
+    exp = {
+        "statusCode": 404,
+    }
+    assert res == exp
+
+
+def test_get_no_query_params():
+    event = {
+        "requestContext": {
+            "http": {
+                "method": "GET"
+            }
+        },
+        "queryStringParameters": {
+        }
+    }
+
+    res = handle(event, None)
+
+    exp = {
+        "statusCode": 400,
+        "body": json.dumps({"error": "Please specify query parameters"})
+    }
+    assert res == exp
+
+
+def test_get_invalid_query_params():
+    event = {
+        "requestContext": {
+            "http": {
+                "method": "GET"
+            }
+        },
+        "queryStringParameters": {
+            "abc": "123"
+        }
+    }
+
+    res = handle(event, None)
+
+    exp = {
+        "statusCode": 400,
+        "body": json.dumps({"error": "Unsupported query param"})
+    }
+    assert res == exp
