@@ -49,7 +49,7 @@ def new_episode(show_id, api_name, api_id):
     return episode_id
 
 
-def _create_episode_uuid(show_id, api_id):
+def create_episode_uuid(show_id, api_id):
     return str(uuid.uuid5(uuid.UUID(show_id), str(api_id)))
 
 
