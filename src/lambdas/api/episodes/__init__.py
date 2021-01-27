@@ -65,14 +65,14 @@ def _post_tvmaze(show_id, tvmaze_id):
     else:
         return {
             "statusCode": 200,
-            "body": json.dumps({"id": episodes_db.create_episode_uuid("tvmaze", tvmaze_id)})
+            "body": json.dumps({"id": episodes_db.create_episode_uuid(show_id, tvmaze_id)})
         }
 
-    episodes_db.new_episode(show_id, "tvmaze", int(tvmaze_id))
+    episode_id = episodes_db.new_episode(show_id, "tvmaze", int(tvmaze_id))
 
     return {
         "statusCode": 200,
-        "body": json.dumps({"id": episodes_db.create_episode_uuid("tvmaze", tvmaze_id)})
+        "body": json.dumps({"id": episode_id})
     }
 
 
