@@ -35,13 +35,6 @@ def _get_table():
     return table
 
 
-def _get_client():
-    global client
-    if client is None:
-        client = boto3.client("dynamodb")
-    return client
-
-
 def new_episode(show_id, api_name, api_id):
     episode_id = create_episode_uuid(show_id, str(api_id))
 
