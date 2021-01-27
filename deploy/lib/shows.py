@@ -113,6 +113,21 @@ class Shows(core.Stack):
                 "timeout": 10,
                 "memory": 128
             },
+            "api-episodes_by_id": {
+                "layers": ["utils", "databases"],
+                "variables": {
+                    "SHOWS_DATABASE_NAME": self.episodes_table.table_name,
+                    "LOG_LEVEL": "INFO",
+                },
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:GetItem"],
+                        resources=[self.episodes_table.table_arn]
+                    )
+                ],
+                "timeout": 3,
+                "memory": 128
+            },
         }
 
     def _create_layers(self):
@@ -245,6 +260,11 @@ class Shows(core.Stack):
                 "method": "POST",
                 "route": "/episodes",
                 "target_lambda": self.lambdas["api-episodes"]
+            },
+            "get_episodes_by_id": {
+                "method": "GET",
+                "route": "/shows/{id}/episodes/{episode_id}",
+                "target_lambda": self.lambdas["api-episodes_by_id"]
             },
         }
 
