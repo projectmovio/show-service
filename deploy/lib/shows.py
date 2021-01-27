@@ -46,6 +46,18 @@ class Shows(core.Stack):
             index_name="tvmaze_id"
         )
 
+        self.episodes_table = Table(
+            self,
+            "episodes_table",
+            table_name="shows-episodes",
+            partition_key=Attribute(name="id", type=AttributeType.STRING),
+            billing_mode=BillingMode.PAY_PER_REQUEST,
+        )
+        self.episodes_table.add_global_secondary_index(
+            partition_key=Attribute(name="tvmaze_id", type=AttributeType.NUMBER),
+            index_name="tvmaze_id"
+        )
+
     def _create_lambdas_config(self):
         self.lambdas_config = {
             "api-shows_by_id": {
@@ -77,6 +89,25 @@ class Shows(core.Stack):
                     PolicyStatement(
                         actions=["dynamodb:UpdateItem"],
                         resources=[self.shows_table.table_arn]
+                    ),
+                ],
+                "timeout": 10,
+                "memory": 128
+            },
+            "api-episodes": {
+                "layers": ["utils", "databases"],
+                "variables": {
+                    "EPISODES_SHOWS_DATABASE_NAME": self.episodes_table.table_name,
+                    "LOG_LEVEL": "INFO",
+                },
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:Query"],
+                        resources=[f"{self.episodes_table.table_arn}/index/tvmaze_id"]
+                    ),
+                    PolicyStatement(
+                        actions=["dynamodb:UpdateItem"],
+                        resources=[self.episodes_table.table_arn]
                     ),
                 ],
                 "timeout": 10,
@@ -204,6 +235,16 @@ class Shows(core.Stack):
                 "method": "GET",
                 "route": "/shows/{id}",
                 "target_lambda": self.lambdas["api-shows_by_id"]
+            },
+            "get_episodes": {
+                "method": "GET",
+                "route": "/episodes",
+                "target_lambda": self.lambdas["api-episodes"]
+            },
+            "post_episodes": {
+                "method": "POST",
+                "route": "/episodes",
+                "target_lambda": self.lambdas["api-episodes"]
             },
         }
 
