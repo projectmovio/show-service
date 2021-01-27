@@ -8,7 +8,6 @@ from dynamodb_json import json_util
 import logger
 
 DATABASE_NAME = os.getenv("SHOW_EPISODES_DATABASE_NAME")
-SHOWS_EPISODES_IDS_INDEX = "shows-id_episode_id"
 
 table = None
 client = None
@@ -72,7 +71,6 @@ def update_episode(episode_id, data):
 
 def get_episode_by_id(show_id, episode_id):
     res = _get_table().query(
-        IndexName=SHOWS_EPISODES_IDS_INDEX,
         Key=Key("id").eq(episode_id) & Key("show_id").eq(show_id)
     )
 
