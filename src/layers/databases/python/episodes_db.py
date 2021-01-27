@@ -8,6 +8,7 @@ from dynamodb_json import json_util
 import logger
 
 DATABASE_NAME = os.getenv("SHOW_EPISODES_DATABASE_NAME")
+SHOWS_EPISODES_IDS_INDEX = "shows-id_episode_id"
 
 table = None
 client = None
@@ -20,6 +21,10 @@ class Error(Exception):
 
 
 class NotFoundError(Error):
+    pass
+
+
+class InvalidAmountOfEpisodes(Error):
     pass
 
 
@@ -38,7 +43,7 @@ def _get_client():
 
 
 def new_episode(show_id, api_name, api_id):
-    episode_id = _create_episode_uuid(show_id, str(api_id))
+    episode_id = create_episode_uuid(show_id, str(api_id))
 
     data = {
         "show_id": show_id,
@@ -72,13 +77,19 @@ def update_episode(episode_id, data):
     )
 
 
-def get_episode_by_id(episode_id):
-    res = _get_table().get_item(Key={"id": episode_id})
+def get_episode_by_id(show_id, episode_id):
+    res = _get_table().query(
+        IndexName=SHOWS_EPISODES_IDS_INDEX,
+        Key=Key("id").eq(episode_id) & Key("show_id").eq(show_id)
+    )
 
-    if "Item" not in res:
-        raise NotFoundError(f"Episode with id: {episode_id} not found")
+    if "Items" not in res or not res["Items"]:
+        raise NotFoundError(f"Episode with id: {episode_id} not found for show with id: {show_id}")
 
-    return res["Item"]
+    if res["Count"] != 1:
+        raise InvalidAmountOfEpisodes(f"Episode with ID: {episode_id} and show_id: {show_id} has {res['Count']} results")
+
+    return res["Items"][0]
 
 
 def get_episode_by_api_id(api_name, api_id):
