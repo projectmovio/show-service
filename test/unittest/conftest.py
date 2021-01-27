@@ -13,3 +13,12 @@ def mocked_shows_db():
     shows_db.client = MagicMock()
 
     return shows_db
+
+
+@pytest.fixture(scope='function')
+def mocked_episodes_db():
+    import episodes_db
+
+    episodes_db.table = MagicMock()
+
+    return episodes_db
