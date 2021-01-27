@@ -17,7 +17,7 @@ def test_get_episode_by_api_id_invalid_count(mocked_episodes_db):
     }
 
     with pytest.raises(mocked_episodes_db.InvalidAmountOfEpisodes):
-        mocked_episodes_db.get_episode_by_id("456", "123")
+        mocked_episodes_db.get_episode_by_api_id("tvmaze", "123")
 
 
 def test_get_episode_by_id_not_found(mocked_episodes_db):
