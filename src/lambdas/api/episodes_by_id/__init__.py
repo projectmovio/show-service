@@ -1,7 +1,6 @@
 import json
 
 import episodes_db
-import shows_db
 import decimal_encoder
 import logger
 
@@ -20,7 +19,7 @@ def handle(event, context):
 
     try:
         res = episodes_db.get_episode_by_id(show_id, episode_id)
-    except shows_db.NotFoundError:
+    except episodes_db.NotFoundError:
         return {"statusCode": 404}
 
     return {
