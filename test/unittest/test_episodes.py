@@ -32,7 +32,8 @@ def test_post_already_exist(mocked_episodes_db):
             {
                 "tvmaze_id": "123"
             }
-        ]
+        ],
+        "Count": 1
     }
     event = {
         "requestContext": {
@@ -127,7 +128,8 @@ def test_get_by_api_id(mocked_episodes_db):
     mocked_episodes_db.table.query.return_value = {
         "Items": [
             exp_res
-        ]
+        ],
+        "Count": 1
     }
     event = {
         "requestContext": {

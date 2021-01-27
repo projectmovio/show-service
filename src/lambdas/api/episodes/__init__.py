@@ -87,7 +87,7 @@ def _get_episode_by_api_id(query_params):
         try:
             res = episodes_db.get_episode_by_api_id("tvmaze", int(query_params["tvmaze_id"]))
             return {"statusCode": 200, "body": json.dumps(res, cls=decimal_encoder.DecimalEncoder)}
-        except episodes_db.NotFoundError:
+        except (episodes_db.NotFoundError, episodes_db.InvalidAmountOfEpisodes):
             return {"statusCode": 404}
     else:
         return {"statusCode": 400, "body": json.dumps({"error": "Unsupported query param"})}

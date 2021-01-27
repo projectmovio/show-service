@@ -94,4 +94,7 @@ def get_episode_by_api_id(api_name, api_id):
     if not res["Items"]:
         raise NotFoundError(f"Episode with {key_name}: {api_id} not found")
 
+    if res["Count"] != 1:
+        raise InvalidAmountOfEpisodes(f"Episode with {key_name}: {api_id} has {res['Count']} results")
+
     return res["Items"][0]

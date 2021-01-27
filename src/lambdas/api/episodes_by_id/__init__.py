@@ -19,7 +19,7 @@ def handle(event, context):
 
     try:
         res = episodes_db.get_episode_by_id(show_id, episode_id)
-    except episodes_db.NotFoundError:
+    except (episodes_db.NotFoundError, episodes_db.InvalidAmountOfEpisodes):
         return {"statusCode": 404}
 
     return {
