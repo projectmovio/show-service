@@ -6,8 +6,13 @@ from api.episodes import handle, UnsupportedMethod
 TEST_SHOW_UUID = "60223a49-f9ec-4bd8-b90e-23a00cba6a58"
 
 
-def test_post(mocked_episodes_db):
+def test_post(mocked_shows_db, mocked_episodes_db):
     mocked_episodes_db.table.query.side_effect = mocked_episodes_db.NotFoundError
+    mocked_shows_db.table.get_item.return_value = {
+        "Item": {
+            "id": TEST_SHOW_UUID
+        }
+    }
     event = {
         "requestContext": {
             "http": {
@@ -29,7 +34,7 @@ def test_post(mocked_episodes_db):
     assert res == exp
 
 
-def test_post_already_exist(mocked_episodes_db):
+def test_post_already_exist(mocked_shows_db, mocked_episodes_db):
     mocked_episodes_db.table.query.return_value = {
         "Items": [
             {
@@ -38,6 +43,12 @@ def test_post_already_exist(mocked_episodes_db):
         ],
         "Count": 1
     }
+    mocked_shows_db.table.get_item.return_value = {
+        "Item": {
+            "id": TEST_SHOW_UUID
+        }
+    }
+
     event = {
         "requestContext": {
             "http": {
@@ -59,7 +70,7 @@ def test_post_already_exist(mocked_episodes_db):
     assert res == exp
 
 
-def test_post_no_body(mocked_episodes_db):
+def test_post_no_body(mocked_shows_db, mocked_episodes_db):
     mocked_episodes_db.table.query.return_value = {
         "Items": [
             {
@@ -67,6 +78,12 @@ def test_post_no_body(mocked_episodes_db):
             },
         ]
     }
+    mocked_shows_db.table.get_item.return_value = {
+        "Item": {
+            "id": TEST_SHOW_UUID
+        }
+    }
+
     event = {
         "requestContext": {
             "http": {
@@ -81,13 +98,13 @@ def test_post_no_body(mocked_episodes_db):
     res = handle(event, None)
 
     exp = {
-        "statusCode": 400,
-        "body": "Invalid post body"
+        'body': '{"message": "Invalid post body"}',
+        'statusCode': 400
     }
     assert res == exp
 
 
-def test_post_invalid_body(mocked_episodes_db):
+def test_post_invalid_body(mocked_shows_db, mocked_episodes_db):
     mocked_episodes_db.table.query.return_value = {
         "Items": [
             {
@@ -95,6 +112,12 @@ def test_post_invalid_body(mocked_episodes_db):
             }
         ]
     }
+    mocked_shows_db.table.get_item.return_value = {
+        "Item": {
+            "id": TEST_SHOW_UUID
+        }
+    }
+
     event = {
         "requestContext": {
             "http": {
@@ -116,8 +139,7 @@ def test_post_invalid_body(mocked_episodes_db):
     }
     assert res == exp
 
-
-def test_post_missing_path_id(mocked_episodes_db):
+def test_post_missing_path_id(mocked_shows_db, mocked_episodes_db):
     mocked_episodes_db.table.query.return_value = {
         "Items": [
             {
@@ -159,7 +181,7 @@ def test_unsupported_method():
         handle(event, None)
 
 
-def test_get_by_api_id(mocked_episodes_db):
+def test_get_by_api_id(mocked_shows_db, mocked_episodes_db):
     exp_res = {
         "id": "123"
     }
@@ -189,7 +211,7 @@ def test_get_by_api_id(mocked_episodes_db):
     assert res == exp
 
 
-def test_get_by_api_id_not_found(mocked_episodes_db):
+def test_get_by_api_id_not_found(mocked_shows_db, mocked_episodes_db):
     mocked_episodes_db.table.query.side_effect = mocked_episodes_db.NotFoundError
     event = {
         "requestContext": {

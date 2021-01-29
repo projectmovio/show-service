@@ -6,6 +6,7 @@ import decimal_encoder
 import episodes_db
 import logger
 import schema
+import shows_db
 
 sqs_queue = None
 
@@ -46,13 +47,22 @@ def _post_episode(query_params, body):
         }
 
     show_id = query_params["id"]
+
+    try:
+        shows_db.get_show_by_id(show_id)
+    except shows_db.NotFoundError:
+        return {
+            "statusCode": 404,
+            "body": json.dumps({"message": "Show not found"})
+        }
+
     try:
         body = json.loads(body)
     except (TypeError, JSONDecodeError):
         log.debug(f"Invalid body: {body}")
         return {
             "statusCode": 400,
-            "body": "Invalid post body"
+            "body": json.dumps({"message": "Invalid post body"})
         }
 
     try:
