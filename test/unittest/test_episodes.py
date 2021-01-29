@@ -14,7 +14,10 @@ def test_post(mocked_episodes_db):
                 "method": "POST"
             }
         },
-        "body": f'{{"show_id": "{TEST_SHOW_UUID}", "api_id": "456", "api_name": "tvmaze"}}'
+        "queryStringParameters": {
+            "id": TEST_SHOW_UUID
+        },
+        "body": '{"api_id": "456", "api_name": "tvmaze"}'
     }
 
     res = handle(event, None)
@@ -41,7 +44,10 @@ def test_post_already_exist(mocked_episodes_db):
                 "method": "POST"
             }
         },
-        "body": f'{{"show_id": "{TEST_SHOW_UUID}", "api_id": "456", "api_name": "tvmaze"}}'
+        "queryStringParameters": {
+            "id": TEST_SHOW_UUID
+        },
+        "body": '{"api_id": "456", "api_name": "tvmaze"}'
     }
 
     res = handle(event, None)
@@ -58,7 +64,7 @@ def test_post_no_body(mocked_episodes_db):
         "Items": [
             {
                 "tvmaze_id": "123"
-            }
+            },
         ]
     }
     event = {
@@ -66,6 +72,9 @@ def test_post_no_body(mocked_episodes_db):
             "http": {
                 "method": "POST"
             }
+        },
+        "queryStringParameters": {
+            "id": TEST_SHOW_UUID
         },
     }
 
@@ -91,6 +100,9 @@ def test_post_invalid_body(mocked_episodes_db):
             "http": {
                 "method": "POST"
             }
+        },
+        "queryStringParameters": {
+            "id": TEST_SHOW_UUID
         },
         "body": '{"aa": "bb"}'
     }
