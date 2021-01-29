@@ -31,14 +31,21 @@ def handle(event, context):
 
     if method == "POST":
         body = event.get("body")
-        return _post_episode(query_params["id"], body)
+        return _post_episode(query_params, body)
     elif method == "GET":
         return _get_episode_by_api_id(query_params)
     else:
         raise UnsupportedMethod()
 
 
-def _post_episode(show_id, body):
+def _post_episode(query_params, body):
+    if query_params is None or "id" not in query_params:
+        return {
+            "statusCode": 400,
+            "body": "Missing id query param"
+        }
+
+    show_id = query_params["id"]
     try:
         body = json.loads(body)
     except (TypeError, JSONDecodeError):
