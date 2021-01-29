@@ -117,6 +117,32 @@ def test_post_invalid_body(mocked_episodes_db):
     assert res == exp
 
 
+def test_post_missing_path_id(mocked_episodes_db):
+    mocked_episodes_db.table.query.return_value = {
+        "Items": [
+            {
+                "mal_id": 123
+            }
+        ]
+    }
+    event = {
+        "requestContext": {
+            "http": {
+                "method": "POST"
+            }
+        },
+        "body": '{"api_id": "456", "api_name": "tvmaze"}'
+    }
+
+    res = handle(event, None)
+
+    exp = {
+        'body': 'Missing id query param',
+        'statusCode': 400
+    }
+    assert res == exp
+
+
 def test_unsupported_method():
     event = {
         "requestContext": {
