@@ -98,6 +98,7 @@ class Shows(core.Stack):
             "api-episodes": {
                 "layers": ["utils", "databases"],
                 "variables": {
+                    "SHOWS_DATABASE_NAME": self.episodes_table.table_name,
                     "EPISODES_SHOWS_DATABASE_NAME": self.episodes_table.table_name,
                     "LOG_LEVEL": "INFO",
                 },
@@ -108,6 +109,10 @@ class Shows(core.Stack):
                     ),
                     PolicyStatement(
                         actions=["dynamodb:UpdateItem"],
+                        resources=[self.episodes_table.table_arn]
+                    ),
+                    PolicyStatement(
+                        actions=["dynamodb:GetItem"],
                         resources=[self.episodes_table.table_arn]
                     ),
                 ],

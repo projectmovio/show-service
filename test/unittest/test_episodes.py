@@ -185,7 +185,7 @@ def test_post_show_not_found(mocked_shows_db, mocked_episodes_db):
         "queryStringParameters": {
             "id": TEST_SHOW_UUID
         },
-         "body": '{"api_id": "456", "api_name": "tvmaze"}'
+        "body": '{"api_id": "456", "api_name": "tvmaze"}'
     }
 
     res = handle(event, None)
