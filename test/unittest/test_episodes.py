@@ -139,6 +139,7 @@ def test_post_invalid_body(mocked_shows_db, mocked_episodes_db):
     }
     assert res == exp
 
+
 def test_post_missing_path_id(mocked_shows_db, mocked_episodes_db):
     mocked_episodes_db.table.query.return_value = {
         "Items": [
@@ -161,6 +162,37 @@ def test_post_missing_path_id(mocked_shows_db, mocked_episodes_db):
     exp = {
         'body': 'Missing id query param',
         'statusCode': 400
+    }
+    assert res == exp
+
+
+def test_post_show_not_found(mocked_shows_db, mocked_episodes_db):
+    mocked_episodes_db.table.query.return_value = {
+        "Items": [
+            {
+                "mal_id": 123
+            }
+        ]
+    }
+    mocked_shows_db.table.get_item.side_effect = mocked_shows_db.NotFoundError
+
+    event = {
+        "requestContext": {
+            "http": {
+                "method": "POST"
+            }
+        },
+        "queryStringParameters": {
+            "id": TEST_SHOW_UUID
+        },
+         "body": '{"api_id": "456", "api_name": "tvmaze"}'
+    }
+
+    res = handle(event, None)
+
+    exp = {
+        'body': '{"message": "Show not found"}',
+        'statusCode': 404
     }
     assert res == exp
 
