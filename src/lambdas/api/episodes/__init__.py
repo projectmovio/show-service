@@ -27,18 +27,18 @@ def handle(event, context):
     log.debug(f"Received event: {event}")
 
     method = event["requestContext"]["http"]["method"]
+    query_params = event.get("queryStringParameters")
 
     if method == "POST":
         body = event.get("body")
-        return _post_episode(body)
+        return _post_episode(query_params["id"], body)
     elif method == "GET":
-        query_params = event.get("queryStringParameters")
         return _get_episode_by_api_id(query_params)
     else:
         raise UnsupportedMethod()
 
 
-def _post_episode(body):
+def _post_episode(show_id, body):
     try:
         body = json.loads(body)
     except (TypeError, JSONDecodeError):
@@ -54,7 +54,7 @@ def _post_episode(body):
         return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
 
     if body["api_name"] == "tvmaze":
-        return _post_tvmaze(body["show_id"], body["api_id"])
+        return _post_tvmaze(show_id, body["api_id"])
 
 
 def _post_tvmaze(show_id, tvmaze_id):

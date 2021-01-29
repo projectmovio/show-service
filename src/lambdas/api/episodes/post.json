@@ -6,19 +6,12 @@
   "default": {},
   "examples": [
     {
-      "show_id": "123",
       "api_name": "tvmaze",
       "api_id": "21"
     }
   ],
   "additionalProperties": false,
   "properties": {
-    "show_id": {
-      "$id": "#/properties/show_id",
-      "type": "string",
-      "title": "Show item UUID",
-      "description": "UUID of the show item to add the episode for"
-    },
     "api_id": {
       "$id": "#/properties/api_id",
       "type": "string",
