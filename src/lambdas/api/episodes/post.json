@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "Add new show episode",
+  "description": "Add a new show episode to the service",
+  "default": {},
+  "examples": [
+    {
+      "api_name": "tvmaze",
+      "api_id": "21"
+    }
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "api_id": {
+      "$id": "#/properties/api_id",
+      "type": "string",
+      "title": "Unique API ID",
+      "description": "A unique ID of the third party API"
+    },
+    "api_name": {
+      "$id": "#/properties/api_name",
+      "type": "string",
+      "title": "API name",
+      "enum": ["tvmaze"],
+      "description": "A enum value for one of the supported third party APIs"
+    }
+  },
+  "required": [
+    "api_id",
+    "api_name"
+  ]
+}

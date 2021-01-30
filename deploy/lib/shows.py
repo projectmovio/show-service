@@ -46,6 +46,19 @@ class Shows(core.Stack):
             index_name="tvmaze_id"
         )
 
+        self.episodes_table = Table(
+            self,
+            "episodes_table",
+            table_name="shows-episodes",
+            partition_key=Attribute(name="id", type=AttributeType.STRING),
+            sort_key=Attribute(name="show_id", type=AttributeType.STRING),
+            billing_mode=BillingMode.PAY_PER_REQUEST,
+        )
+        self.episodes_table.add_global_secondary_index(
+            partition_key=Attribute(name="tvmaze_id", type=AttributeType.NUMBER),
+            index_name="tvmaze_id"
+        )
+
     def _create_lambdas_config(self):
         self.lambdas_config = {
             "api-shows_by_id": {
@@ -80,6 +93,45 @@ class Shows(core.Stack):
                     ),
                 ],
                 "timeout": 10,
+                "memory": 128
+            },
+            "api-episodes": {
+                "layers": ["utils", "databases"],
+                "variables": {
+                    "SHOWS_DATABASE_NAME": self.episodes_table.table_name,
+                    "SHOW_EPISODES_DATABASE_NAME": self.episodes_table.table_name,
+                    "LOG_LEVEL": "INFO",
+                },
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:Query"],
+                        resources=[f"{self.episodes_table.table_arn}/index/tvmaze_id"]
+                    ),
+                    PolicyStatement(
+                        actions=["dynamodb:UpdateItem"],
+                        resources=[self.episodes_table.table_arn]
+                    ),
+                    PolicyStatement(
+                        actions=["dynamodb:GetItem"],
+                        resources=[self.episodes_table.table_arn]
+                    ),
+                ],
+                "timeout": 10,
+                "memory": 128
+            },
+            "api-episodes_by_id": {
+                "layers": ["utils", "databases"],
+                "variables": {
+                    "SHOWS_DATABASE_NAME": self.episodes_table.table_name,
+                    "LOG_LEVEL": "INFO",
+                },
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:GetItem"],
+                        resources=[self.episodes_table.table_arn]
+                    )
+                ],
+                "timeout": 3,
                 "memory": 128
             },
         }
@@ -192,18 +244,33 @@ class Shows(core.Stack):
         routes = {
             "get_shows": {
                 "method": "GET",
-                "route": "/v1/shows",
+                "route": "/shows",
                 "target_lambda": self.lambdas["api-shows"]
             },
             "post_shows": {
                 "method": "POST",
-                "route": "/v1/shows",
+                "route": "/shows",
                 "target_lambda": self.lambdas["api-shows"]
             },
             "get_shows_by_id": {
                 "method": "GET",
-                "route": "/v1/shows/{id}",
+                "route": "/shows/{id}",
                 "target_lambda": self.lambdas["api-shows_by_id"]
+            },
+            "get_episodes": {
+                "method": "GET",
+                "route": "/episodes",
+                "target_lambda": self.lambdas["api-episodes"]
+            },
+            "post_episodes": {
+                "method": "POST",
+                "route": "/shows/{id}/episodes",
+                "target_lambda": self.lambdas["api-episodes"]
+            },
+            "get_episodes_by_id": {
+                "method": "GET",
+                "route": "/shows/{id}/episodes/{episode_id}",
+                "target_lambda": self.lambdas["api-episodes_by_id"]
             },
         }
 
