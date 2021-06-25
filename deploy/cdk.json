@@ -1,4 +1,7 @@
 {
   "app": "python3 cdk.py",
-  "requireApproval": "never"
+  "requireApproval": "never",
+   "context": {
+    "aws-cdk:enableDiffNoFail": true
+  }
 }
