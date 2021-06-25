@@ -134,7 +134,8 @@ def test_get_by_api_id(mocked_shows_db):
             }
         },
         "queryStringParameters": {
-            "tvmaze_id": "123"
+            "api_id": "123",
+            "api_name": "tvmaze",
         }
     }
 
@@ -156,7 +157,8 @@ def test_get_by_api_id_not_found(mocked_shows_db):
             }
         },
         "queryStringParameters": {
-            "tvmaze_id": "123"
+            "api_id": "123",
+            "api_name": "tvmaze",
         }
     }
 
@@ -204,6 +206,6 @@ def test_get_invalid_query_params():
 
     exp = {
         "statusCode": 400,
-        "body": json.dumps({"error": "Unsupported query param"})
+        "body": json.dumps({"error": "Missing api_id query parameter"})
     }
     assert res == exp

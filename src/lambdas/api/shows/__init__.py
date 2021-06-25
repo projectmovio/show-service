@@ -51,7 +51,13 @@ def _post_show(body):
     try:
         schema.validate_schema(POST_SCHEMA_PATH, body)
     except schema.ValidationException as e:
-        return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
+        return {
+            "statusCode": 400,
+            "body": json.dumps({
+                "message": "Invalid post schema",
+                "error": str(e)
+            })
+        }
 
     if body["api_name"] == "tvmaze":
         return _post_tvmaze(body["api_id"])
@@ -65,14 +71,16 @@ def _post_tvmaze(tvmaze_id):
     else:
         return {
             "statusCode": 200,
-            "body": json.dumps({"id": shows_db.create_show_uuid("tvmaze", tvmaze_id)})
+            "body": json.dumps(
+                {"id": shows_db.create_show_uuid("tvmaze", tvmaze_id)})
         }
 
     shows_db.new_show("tvmaze", int(tvmaze_id))
 
     return {
         "statusCode": 200,
-        "body": json.dumps({"id": shows_db.create_show_uuid("tvmaze", tvmaze_id)})
+        "body": json.dumps(
+            {"id": shows_db.create_show_uuid("tvmaze", tvmaze_id)})
     }
 
 
@@ -83,11 +91,32 @@ def _get_show_by_api_id(query_params):
             "body": json.dumps({"error": "Please specify query parameters"})
         }
 
-    if "tvmaze_id" in query_params:
+    if "api_id" not in query_params:
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"error": "Missing api_id query parameter"})
+        }
+
+    if "api_name" not in query_params:
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"error": "Missing api_name query parameter"})
+        }
+
+    api_id = int(query_params["api_id"])
+    api_name = query_params["api_name"]
+
+    if api_name in ["tvmaze"]:
         try:
-            res = shows_db.get_show_by_api_id("tvmaze", int(query_params["tvmaze_id"]))
-            return {"statusCode": 200, "body": json.dumps(res, cls=decimal_encoder.DecimalEncoder)}
+            res = shows_db.get_show_by_api_id(api_name, api_id)
+            return {
+                "statusCode": 200,
+                "body": json.dumps(res, cls=decimal_encoder.DecimalEncoder)
+            }
         except shows_db.NotFoundError:
             return {"statusCode": 404}
     else:
-        return {"statusCode": 400, "body": json.dumps({"error": "Unsupported query param"})}
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"error": "Unsupported api_name"})
+        }

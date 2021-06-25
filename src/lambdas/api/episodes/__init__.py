@@ -68,7 +68,8 @@ def _post_episode(query_params, body):
     try:
         schema.validate_schema(POST_SCHEMA_PATH, body)
     except schema.ValidationException as e:
-        return {"statusCode": 400, "body": json.dumps({"message": "Invalid post schema", "error": str(e)})}
+        return {"statusCode": 400, "body": json.dumps(
+            {"message": "Invalid post schema", "error": str(e)})}
 
     if body["api_name"] == "tvmaze":
         return _post_tvmaze(show_id, body["api_id"])
@@ -82,7 +83,8 @@ def _post_tvmaze(show_id, tvmaze_id):
     else:
         return {
             "statusCode": 200,
-            "body": json.dumps({"id": episodes_db.create_episode_uuid(show_id, tvmaze_id)})
+            "body": json.dumps(
+                {"id": episodes_db.create_episode_uuid(show_id, tvmaze_id)})
         }
 
     episode_id = episodes_db.new_episode(show_id, "tvmaze", int(tvmaze_id))
@@ -100,11 +102,32 @@ def _get_episode_by_api_id(query_params):
             "body": json.dumps({"error": "Please specify query parameters"})
         }
 
-    if "tvmaze_id" in query_params:
+    if "api_id" not in query_params:
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"error": "Missing api_id query parameter"})
+        }
+
+    if "api_name" not in query_params:
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"error": "Missing api_name query parameter"})
+        }
+
+    api_id = int(query_params["api_id"])
+    api_name = query_params["api_name"]
+
+    if api_name in ["tvmaze"]:
         try:
-            res = episodes_db.get_episode_by_api_id("tvmaze", int(query_params["tvmaze_id"]))
-            return {"statusCode": 200, "body": json.dumps(res, cls=decimal_encoder.DecimalEncoder)}
+            res = episodes_db.get_episode_by_api_id(api_name, api_id)
+            return {
+                "statusCode": 200,
+                "body": json.dumps(res, cls=decimal_encoder.DecimalEncoder)
+            }
         except (episodes_db.NotFoundError, episodes_db.InvalidAmountOfEpisodes):
             return {"statusCode": 404}
     else:
-        return {"statusCode": 400, "body": json.dumps({"error": "Unsupported query param"})}
+        return {
+            "statusCode": 400,
+            "body": json.dumps({"error": "Unsupported api_name"})
+        }
