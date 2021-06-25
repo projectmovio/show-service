@@ -165,3 +165,25 @@ class TestGet:
             "body": json.dumps({"error": "Missing api_id query parameter"})
         }
         assert res == exp
+
+    def test_missing_api_name(self):
+        event = copy.deepcopy(self.event)
+        del event["queryStringParameters"]["api_name"]
+        res = handle(event, None)
+
+        exp = {
+            "statusCode": 400,
+            "body": json.dumps({"error": "Missing api_name query parameter"})
+        }
+        assert res == exp
+
+    def test_invalid_api_name(self):
+        event = copy.deepcopy(self.event)
+        event["queryStringParameters"]["api_name"] = "INVALID"
+        res = handle(event, None)
+
+        exp = {
+            "statusCode": 400,
+            "body": json.dumps({"error": "Unsupported api_name"})
+        }
+        assert res == exp
