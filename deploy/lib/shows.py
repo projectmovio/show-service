@@ -259,7 +259,7 @@ class Shows(core.Stack):
             },
             "get_episodes": {
                 "method": "GET",
-                "route": "/shows/{id}/episodes",
+                "route": "/episodes",
                 "target_lambda": self.lambdas["api-episodes"]
             },
             "post_episodes": {
