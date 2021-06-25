@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: cdk deploy
-        uses: youyo/aws-cdk-github-actions@v1.1.10
+        uses: youyo/aws-cdk-github-actions@v2.0.2
         with:
           cdk_stack: shows
           cdk_version: 1.50.0
