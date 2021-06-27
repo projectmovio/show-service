@@ -30,7 +30,7 @@ class TestPost:
                 "method": "POST"
             }
         },
-        "queryStringParameters": {
+        "pathParameters": {
             "id": TEST_SHOW_UUID
         },
         "body": '{"api_id": "456", "api_name": "tvmaze"}'
@@ -136,7 +136,7 @@ class TestPost:
         }
 
         event = copy.deepcopy(self.event)
-        del event["queryStringParameters"]
+        del event["pathParameters"]
 
         res = handle(event, None)
 
