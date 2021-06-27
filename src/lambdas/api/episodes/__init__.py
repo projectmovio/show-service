@@ -31,22 +31,21 @@ def handle(event, context):
     query_params = event.get("queryStringParameters")
 
     if method == "POST":
+        show_id = event["pathParameters"].get("id")
         body = event.get("body")
-        return _post_episode(query_params, body)
+        return _post_episode(show_id, body)
     elif method == "GET":
         return _get_episode_by_api_id(query_params)
     else:
         raise UnsupportedMethod()
 
 
-def _post_episode(query_params, body):
-    if query_params is None or "id" not in query_params:
+def _post_episode(show_id, body):
+    if show_id is None:
         return {
             "statusCode": 400,
             "body": "Missing id query param"
         }
-
-    show_id = query_params["id"]
 
     try:
         shows_db.get_show_by_id(show_id)
