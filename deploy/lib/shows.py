@@ -104,6 +104,10 @@ class Shows(core.Stack):
                 },
                 "policies": [
                     PolicyStatement(
+                        actions=["dynamodb:GetItem"],
+                        resources=[self.shows_table.table_arn]
+                    ),
+                    PolicyStatement(
                         actions=["dynamodb:Query"],
                         resources=[f"{self.episodes_table.table_arn}/index/tvmaze_id"]
                     ),
