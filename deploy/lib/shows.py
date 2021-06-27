@@ -98,7 +98,7 @@ class Shows(core.Stack):
             "api-episodes": {
                 "layers": ["utils", "databases"],
                 "variables": {
-                    "SHOWS_DATABASE_NAME": self.episodes_table.table_name,
+                    "SHOWS_DATABASE_NAME": self.shows_table.table_name,
                     "SHOW_EPISODES_DATABASE_NAME": self.episodes_table.table_name,
                     "LOG_LEVEL": "INFO",
                 },

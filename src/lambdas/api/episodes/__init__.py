@@ -28,13 +28,13 @@ def handle(event, context):
     log.debug(f"Received event: {event}")
 
     method = event["requestContext"]["http"]["method"]
-    query_params = event.get("queryStringParameters")
 
     if method == "POST":
         show_id = event.get("pathParameters", {})
         body = event.get("body")
         return _post_episode(show_id, body)
     elif method == "GET":
+        query_params = event.get("queryStringParameters")
         return _get_episode_by_api_id(query_params)
     else:
         raise UnsupportedMethod()
