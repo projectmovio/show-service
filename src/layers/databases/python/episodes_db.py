@@ -38,10 +38,9 @@ def new_episode(show_id, api_name, api_id):
     episode_id = create_episode_uuid(show_id, str(api_id))
 
     data = {
-        "show_id": show_id,
         f"{api_name}_id": api_id
     }
-    update_episode(episode_id, data)
+    update_episode(show_id, episode_id, data)
 
     return episode_id
 
@@ -50,7 +49,7 @@ def create_episode_uuid(show_id, api_id):
     return str(uuid.uuid5(uuid.UUID(show_id), str(api_id)))
 
 
-def update_episode(episode_id, data):
+def update_episode(show_id, episode_id, data):
     items = ','.join(f'#{k}=:{k}' for k in data)
     update_expression = f"SET {items}"
     expression_attribute_names = {f'#{k}': k for k in data}
@@ -62,7 +61,7 @@ def update_episode(episode_id, data):
     log.debug(f"Expression attribute values: {expression_attribute_values}")
 
     _get_table().update_item(
-        Key={"id": episode_id},
+        Key={"show_id": show_id, "id": episode_id},
         UpdateExpression=update_expression,
         ExpressionAttributeNames=expression_attribute_names,
         ExpressionAttributeValues=expression_attribute_values
