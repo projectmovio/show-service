@@ -50,9 +50,13 @@ class Shows(core.Stack):
             self,
             "episodes_table",
             table_name="shows-episodes",
-            partition_key=Attribute(name="id", type=AttributeType.STRING),
-            sort_key=Attribute(name="show_id", type=AttributeType.STRING),
+            partition_key=Attribute(name="show_id", type=AttributeType.STRING),
+            sort_key=Attribute(name="id", type=AttributeType.STRING),
             billing_mode=BillingMode.PAY_PER_REQUEST,
+        )
+        self.episodes_table.add_local_secondary_index(
+            sort_key=Attribute(name="id", type=AttributeType.STRING),
+            index_name="episode_id"
         )
         self.episodes_table.add_global_secondary_index(
             partition_key=Attribute(name="tvmaze_id", type=AttributeType.NUMBER),
