@@ -54,7 +54,7 @@ class Shows(core.Stack):
             sort_key=Attribute(name="id", type=AttributeType.STRING),
             billing_mode=BillingMode.PAY_PER_REQUEST,
         )
-        self.anime_episodes.add_local_secondary_index(
+        self.episodes_table.add_local_secondary_index(
             sort_key=Attribute(name="id", type=AttributeType.STRING),
             index_name="episode_id"
         )
