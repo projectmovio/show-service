@@ -49,7 +49,7 @@ class Shows(core.Stack):
         self.episodes_table = Table(
             self,
             "episodes_table",
-            table_name="shows-episodes",
+            table_name="shows-eps",
             partition_key=Attribute(name="show_id", type=AttributeType.STRING),
             sort_key=Attribute(name="id", type=AttributeType.STRING),
             billing_mode=BillingMode.PAY_PER_REQUEST,
