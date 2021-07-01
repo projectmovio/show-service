@@ -7,7 +7,7 @@ def test_handler(mocked_episodes_db):
         "id": "456",
         "title": "episode1",
     }
-    mocked_episodes_db.table.query.return_value = {"Items": [exp_item], "Count": 1}
+    mocked_episodes_db.table.get_item.return_value = {"Item": exp_item, "Count": 1}
     event = {
         "pathParameters": {
             "id": "123",

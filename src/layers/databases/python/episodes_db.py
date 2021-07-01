@@ -69,17 +69,14 @@ def update_episode(show_id, episode_id, data):
 
 
 def get_episode_by_id(show_id, episode_id):
-    res = _get_table().query(
+    res = _get_table().get_item(
         Key=Key("id").eq(episode_id) & Key("show_id").eq(show_id)
     )
 
-    if "Items" not in res or not res["Items"]:
+    if "Item" not in res or not res["Item"]:
         raise NotFoundError(f"Episode with id: {episode_id} not found for show with id: {show_id}")
 
-    if res["Count"] != 1:
-        raise InvalidAmountOfEpisodes(f"Episode with ID: {episode_id} and show_id: {show_id} has {res['Count']} results")
-
-    return res["Items"][0]
+    return res["Item"]
 
 
 def get_episode_by_api_id(api_name, api_id):
