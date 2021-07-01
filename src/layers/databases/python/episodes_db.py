@@ -69,7 +69,7 @@ def update_episode(show_id, episode_id, data):
 
 
 def get_episode_by_id(show_id, episode_id):
-    res = _get_table().query(
+    res = _get_table().get_item(
         Key=Key("id").eq(episode_id) & Key("show_id").eq(show_id)
     )
 
