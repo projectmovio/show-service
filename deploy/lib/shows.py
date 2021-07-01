@@ -131,6 +131,7 @@ class Shows(core.Stack):
                 "layers": ["utils", "databases"],
                 "variables": {
                     "SHOWS_DATABASE_NAME": self.episodes_table.table_name,
+                    "SHOW_EPISODES_DATABASE_NAME": self.episodes_table.table_name,
                     "LOG_LEVEL": "INFO",
                 },
                 "policies": [
