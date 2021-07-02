@@ -4,11 +4,14 @@ import subprocess
 
 from aws_cdk import core
 from aws_cdk.aws_apigateway import DomainName, SecurityPolicy
-from aws_cdk.aws_apigatewayv2 import HttpApi, HttpMethod, CfnAuthorizer, CfnRoute, \
-    HttpIntegration, HttpIntegrationType, PayloadFormatVersion, CfnStage, HttpApiMapping, CorsPreflightOptions
+from aws_cdk.aws_apigatewayv2 import HttpApi, HttpMethod, CfnAuthorizer, \
+    CfnRoute, \
+    HttpIntegration, HttpIntegrationType, PayloadFormatVersion, CfnStage, \
+    HttpApiMapping, CorsPreflightOptions
 from aws_cdk.aws_certificatemanager import Certificate, ValidationMethod
 from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
-from aws_cdk.aws_iam import Role, ServicePrincipal, PolicyStatement, ManagedPolicy
+from aws_cdk.aws_iam import Role, ServicePrincipal, PolicyStatement, \
+    ManagedPolicy
 from aws_cdk.aws_lambda import LayerVersion, Code, Runtime, Function
 from aws_cdk.core import Duration
 
@@ -42,7 +45,8 @@ class Shows(core.Stack):
             billing_mode=BillingMode.PAY_PER_REQUEST,
         )
         self.shows_table.add_global_secondary_index(
-            partition_key=Attribute(name="tvmaze_id", type=AttributeType.NUMBER),
+            partition_key=Attribute(name="tvmaze_id",
+                                    type=AttributeType.NUMBER),
             index_name="tvmaze_id"
         )
 
@@ -59,7 +63,8 @@ class Shows(core.Stack):
             index_name="episode_id"
         )
         self.episodes_table.add_global_secondary_index(
-            partition_key=Attribute(name="tvmaze_id", type=AttributeType.NUMBER),
+            partition_key=Attribute(name="tvmaze_id",
+                                    type=AttributeType.NUMBER),
             index_name="tvmaze_id"
         )
 
@@ -89,7 +94,8 @@ class Shows(core.Stack):
                 "policies": [
                     PolicyStatement(
                         actions=["dynamodb:Query"],
-                        resources=[f"{self.shows_table.table_arn}/index/tvmaze_id"]
+                        resources=[
+                            f"{self.shows_table.table_arn}/index/tvmaze_id"]
                     ),
                     PolicyStatement(
                         actions=["dynamodb:UpdateItem"],
@@ -113,7 +119,8 @@ class Shows(core.Stack):
                     ),
                     PolicyStatement(
                         actions=["dynamodb:Query"],
-                        resources=[f"{self.episodes_table.table_arn}/index/tvmaze_id"]
+                        resources=[
+                            f"{self.episodes_table.table_arn}/index/tvmaze_id"]
                     ),
                     PolicyStatement(
                         actions=["dynamodb:UpdateItem"],
@@ -130,15 +137,14 @@ class Shows(core.Stack):
             "api-episodes_by_id": {
                 "layers": ["utils", "databases"],
                 "variables": {
-                    "SHOWS_DATABASE_NAME": self.episodes_table.table_name,
                     "SHOW_EPISODES_DATABASE_NAME": self.episodes_table.table_name,
                     "LOG_LEVEL": "INFO",
                 },
                 "policies": [
                     PolicyStatement(
-                        actions=["dynamodb:GetItem"],
+                        actions=["dynamodb:Query"],
                         resources=[self.episodes_table.table_arn]
-                    )
+                    ),
                 ],
                 "timeout": 3,
                 "memory": 128
@@ -158,9 +164,12 @@ class Shows(core.Stack):
             requirements_path = os.path.join(build_folder, "requirements.txt")
 
             if os.path.isfile(requirements_path):
-                packages_folder = os.path.join(build_folder, "python", "lib", "python3.8", "site-packages")
+                packages_folder = os.path.join(build_folder, "python", "lib",
+                                               "python3.8", "site-packages")
                 # print(f"Installing layer requirements to target: {os.path.abspath(packages_folder)}")
-                subprocess.check_output(["pip", "install", "-r", requirements_path, "-t", packages_folder])
+                subprocess.check_output(
+                    ["pip", "install", "-r", requirements_path, "-t",
+                     packages_folder])
                 clean_pycache()
 
             self.layers[layer] = LayerVersion(
@@ -194,7 +203,8 @@ class Shows(core.Stack):
                 for policy in lambda_config["policies"]:
                     lambda_role.add_to_policy(policy)
                 lambda_role.add_managed_policy(
-                    ManagedPolicy.from_aws_managed_policy_name("service-role/AWSLambdaBasicExecutionRole"))
+                    ManagedPolicy.from_aws_managed_policy_name(
+                        "service-role/AWSLambdaBasicExecutionRole"))
 
                 self.lambdas[name] = Function(
                     self,
