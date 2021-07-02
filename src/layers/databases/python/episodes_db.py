@@ -70,7 +70,7 @@ def update_episode(show_id, episode_id, data):
 
 def get_episode_by_id(show_id, episode_id):
     res = _get_table().query(
-        Key=Key("id").eq(episode_id) & Key("show_id").eq(show_id)
+        KeyConditionExpression=Key("id").eq(episode_id) & Key("show_id").eq(show_id)
     )
 
     if "Items" not in res or not res["Items"]:
