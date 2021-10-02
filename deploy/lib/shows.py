@@ -168,8 +168,8 @@ class Shows(core.Stack):
                 },
                 "policies": [
                     PolicyStatement(
-                        actions=["dynamodb:GetItem"],
-                        resources=[self.episodes_table.table_arn],
+                        actions=["dynamodb:Query"],
+                        resources=[f"{self.episodes_table.table_arn}/index/tvmaze_id"],
                     ),
                     PolicyStatement(
                         actions=["sns:Publish"],
