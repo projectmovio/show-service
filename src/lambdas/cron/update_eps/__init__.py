@@ -9,7 +9,7 @@ def handle(event, context):
 
     for tvmaze_id in tvmaze_updates:
         try:
-            shows_db.get_show_by_api_id("tvmaze", tvmaze_id)
+            shows_db.get_show_by_api_id("tvmaze", int(tvmaze_id))
         except shows_db.NotFoundError:
             # Show not present in db, exclude it from updates
             continue
