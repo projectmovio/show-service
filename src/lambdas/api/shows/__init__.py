@@ -6,6 +6,7 @@ import decimal_encoder
 import logger
 import schema
 import shows_db
+from tvmaze import TvMazeApi
 
 sqs_queue = None
 
@@ -13,6 +14,8 @@ log = logger.get_logger("show")
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 POST_SCHEMA_PATH = os.path.join(CURRENT_DIR, "post.json")
+
+tvmaze_api = TvMazeApi()
 
 
 class Error(Exception):
@@ -109,6 +112,8 @@ def _get_show_by_api_id(query_params):
     if api_name in ["tvmaze"]:
         try:
             res = shows_db.get_show_by_api_id(api_name, api_id)
+            api_res = tvmaze_api.get_show_episodes_count(api_id)
+            res = {**res, **api_res}
             return {
                 "statusCode": 200,
                 "body": json.dumps(res, cls=decimal_encoder.DecimalEncoder)

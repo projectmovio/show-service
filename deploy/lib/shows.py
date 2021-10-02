@@ -3,17 +3,20 @@ import shutil
 import subprocess
 
 from aws_cdk import core
-from aws_cdk.aws_apigateway import DomainName, SecurityPolicy
 from aws_cdk.aws_apigatewayv2 import HttpApi, HttpMethod, CfnAuthorizer, \
     CfnRoute, \
-    HttpIntegration, HttpIntegrationType, PayloadFormatVersion, CfnStage, \
-    HttpApiMapping, CorsPreflightOptions
+    HttpIntegration, HttpIntegrationType, PayloadFormatVersion, \
+    CorsPreflightOptions, DomainMappingOptions, HttpStage, \
+    DomainName
 from aws_cdk.aws_certificatemanager import Certificate, ValidationMethod
 from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
 from aws_cdk.aws_iam import Role, ServicePrincipal, PolicyStatement, \
     ManagedPolicy
 from aws_cdk.aws_lambda import LayerVersion, Code, Runtime, Function
+from aws_cdk.aws_sns import Topic
+from aws_cdk.aws_sqs import Queue
 from aws_cdk.core import Duration
+from aws_cdk.aws_lambda_event_sources import SnsEventSource
 
 from lib.utils import clean_pycache
 
@@ -31,6 +34,7 @@ class Shows(core.Stack):
         self.layers = {}
         self.lambdas = {}
         self._create_tables()
+        self._create_topic()
         self._create_lambdas_config()
         self._create_layers()
         self._create_lambdas()
@@ -68,6 +72,12 @@ class Shows(core.Stack):
             index_name="tvmaze_id"
         )
 
+    def _create_topic(self):
+        self.show_updates_topic = Topic(
+            self,
+            "shows_updates",
+        )
+
     def _create_lambdas_config(self):
         self.lambdas_config = {
             "api-shows_by_id": {
@@ -86,7 +96,7 @@ class Shows(core.Stack):
                 "memory": 128
             },
             "api-shows": {
-                "layers": ["utils", "databases"],
+                "layers": ["utils", "databases", "api"],
                 "variables": {
                     "SHOWS_DATABASE_NAME": self.shows_table.table_name,
                     "LOG_LEVEL": "INFO",
@@ -145,6 +155,26 @@ class Shows(core.Stack):
                         actions=["dynamodb:Query"],
                         resources=[self.episodes_table.table_arn]
                     ),
+                ],
+                "timeout": 3,
+                "memory": 128
+            },
+            "cron-update_eps": {
+                "layers": ["utils", "databases", "api"],
+                "variables": {
+                    "SHOWS_DATABASE_NAME": self.episodes_table.table_name,
+                    "LOG_LEVEL": "INFO",
+                    "UPDATES_TOPIC_ARN": self.show_updates_topic.topic_arn,
+                },
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:GetItem"],
+                        resources=[self.episodes_table.table_arn],
+                    ),
+                    PolicyStatement(
+                        actions=["sns:Publish"],
+                        resources=[self.show_updates_topic.topic_arn],
+                    )
                 ],
                 "timeout": 3,
                 "memory": 128
@@ -217,8 +247,14 @@ class Shows(core.Stack):
                     environment=lambda_config["variables"],
                     role=lambda_role,
                     timeout=Duration.seconds(lambda_config["timeout"]),
-                    memory_size=lambda_config["memory"]
+                    memory_size=lambda_config["memory"],
                 )
+
+                if name == "cron-update_eps":
+                    self.lambdas[name].add_event_source(SnsEventSource(
+                        self.show_updates_topic,
+                        dead_letter_queue=Queue(self, "update_eps_dlq"),
+                    ))
 
     def _create_gateway(self):
         cert = Certificate(
@@ -230,9 +266,8 @@ class Shows(core.Stack):
         domain_name = DomainName(
             self,
             "domain",
-            domain_name=self.domain_name,
             certificate=cert,
-            security_policy=SecurityPolicy.TLS_1_2
+            domain_name=self.domain_name,
         )
 
         http_api = HttpApi(
@@ -319,22 +354,13 @@ class Shows(core.Stack):
                 source_arn=f"arn:aws:execute-api:{self.region}:{self.account}:{http_api.http_api_id}/*"
             )
 
-        stage = CfnStage(
+        HttpStage(
             self,
             "live",
-            api_id=http_api.http_api_id,
+            http_api=http_api,
             auto_deploy=True,
-            default_route_settings=CfnStage.RouteSettingsProperty(
-                throttling_burst_limit=10,
-                throttling_rate_limit=5
-            ),
-            stage_name="live"
-        )
-
-        HttpApiMapping(
-            self,
-            "mapping",
-            api=http_api,
-            domain_name=domain_name,
-            stage=stage
+            stage_name="live",
+            domain_mapping=DomainMappingOptions(
+                domain_name=domain_name,
+            )
         )

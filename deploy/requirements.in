@@ -1,10 +1,11 @@
-aws-cdk.core==1.50.0
-aws_cdk.aws_lambda==1.50.0
-aws_cdk.aws_dynamodb==1.50.0
-aws_cdk.aws_iam==1.50.0
-aws_cdk.aws_s3==1.50.0
-aws-cdk.aws-apigateway==1.50.0
-aws_cdk.aws_apigatewayv2==1.50.0
-aws_cdk.aws_certificatemanager==1.50.0
+aws-cdk.core==1.125.0
+aws_cdk.aws_lambda==1.125.0
+aws_cdk.aws_dynamodb==1.125.0
+aws_cdk.aws_iam==1.125.0
+aws_cdk.aws_s3==1.125.0
+aws-cdk.aws-apigateway==1.125.0
+aws_cdk.aws_apigatewayv2==1.125.0
+aws_cdk.aws_certificatemanager==1.125.0
+aws_cdk.aws_lambda_event_sources==1.125.0
 
 wheel

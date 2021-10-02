@@ -114,7 +114,9 @@ class TestGet:
 
     def test_success(self, mocked_shows_db):
         exp_res = {
-            "id": "123"
+            "id": "123",
+            "ep_count": 1,
+            "special_count": 1,
         }
         mocked_shows_db.table.query.return_value = {
             "Items": [
