@@ -10,6 +10,7 @@ from aws_cdk.aws_certificatemanager import Certificate, ValidationMethod
 from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
 from aws_cdk.aws_iam import Role, ServicePrincipal, PolicyStatement, ManagedPolicy
 from aws_cdk.aws_lambda import LayerVersion, Code, Runtime, Function
+from aws_cdk.aws_sns import Topic
 from aws_cdk.core import Duration
 
 from lib.utils import clean_pycache
@@ -28,6 +29,7 @@ class Shows(core.Stack):
         self.layers = {}
         self.lambdas = {}
         self._create_tables()
+        self._create_topic()
         self._create_lambdas_config()
         self._create_layers()
         self._create_lambdas()
@@ -61,6 +63,12 @@ class Shows(core.Stack):
         self.episodes_table.add_global_secondary_index(
             partition_key=Attribute(name="tvmaze_id", type=AttributeType.NUMBER),
             index_name="tvmaze_id"
+        )
+
+    def _create_topic(self):
+        self.show_updates_topic = Topic(
+            self,
+            "shows_updates",
         )
 
     def _create_lambdas_config(self):
