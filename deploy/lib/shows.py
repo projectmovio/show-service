@@ -7,7 +7,7 @@ from aws_cdk.aws_apigatewayv2 import HttpApi, HttpMethod, \
     CfnRoute, \
     HttpIntegration, HttpIntegrationType, PayloadFormatVersion, \
     CorsPreflightOptions, DomainMappingOptions, HttpStage, \
-    DomainName, HttpAuthorizer
+    DomainName, HttpAuthorizer, HttpRoute
 from aws_cdk.aws_certificatemanager import Certificate, ValidationMethod
 from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
 from aws_cdk.aws_events import Schedule, Rule
@@ -284,14 +284,6 @@ class Shows(core.Stack):
             )
         )
 
-        authorizer = HttpAuthorizer(
-            self,
-            "iam",
-            http_api=http_api,
-            identity_source=["$request.header.Authorization"],
-            type="AWS_IAM",
-        )
-
         routes = {
             "get_shows": {
                 "method": "GET",
@@ -335,14 +327,13 @@ class Shows(core.Stack):
                 method=getattr(HttpMethod, routes[r]["method"]),
                 payload_format_version=PayloadFormatVersion.VERSION_2_0,
             )
-            CfnRoute(
+            HttpRoute(
                 self,
                 r,
-                api_id=http_api.http_api_id,
+                http_api=http_api,
                 route_key=f"{routes[r]['method']} {routes[r]['route']}",
-                authorization_type="JWT",
-                authorizer_id=authorizer.ref,
-                target="integrations/" + integration.integration_id
+                authorization_type="AWS_IAM",
+                integration=integration,
             )
 
             routes[r]["target_lambda"].add_permission(
