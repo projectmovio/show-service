@@ -46,4 +46,7 @@ class TvMazeApi:
             else:
                 special_count = 1
 
-        return ep_count, special_count
+        return {
+            "ep_count": ep_count,
+            "special_count": special_count,
+        }
