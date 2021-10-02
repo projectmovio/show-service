@@ -289,7 +289,7 @@ class Shows(core.Stack):
             "iam",
             http_api=http_api,
             identity_source=["$request.header.Authorization"],
-            authorizer_type="AWS_IAM",
+            type="AWS_IAM",
         )
 
         routes = {
