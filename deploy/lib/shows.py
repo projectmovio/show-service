@@ -11,7 +11,9 @@ from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
 from aws_cdk.aws_iam import Role, ServicePrincipal, PolicyStatement, ManagedPolicy
 from aws_cdk.aws_lambda import LayerVersion, Code, Runtime, Function
 from aws_cdk.aws_sns import Topic
+from aws_cdk.aws_sqs import Queue
 from aws_cdk.core import Duration
+from aws_cdk.aws_lambda_event_sources import SnsEventSource
 
 from lib.utils import clean_pycache
 
@@ -235,8 +237,14 @@ class Shows(core.Stack):
                     environment=lambda_config["variables"],
                     role=lambda_role,
                     timeout=Duration.seconds(lambda_config["timeout"]),
-                    memory_size=lambda_config["memory"]
+                    memory_size=lambda_config["memory"],
                 )
+
+                if name == "cron-update_eps":
+                    self.lambdas[name].add_event_source(SnsEventSource(
+                        self.show_updates_topic,
+                        dead_letter_queue=Queue(self, "update_eps_dlq"),
+                    ))
 
     def _create_gateway(self):
         cert = Certificate(
