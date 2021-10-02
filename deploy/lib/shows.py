@@ -7,7 +7,7 @@ from aws_cdk.aws_apigateway import DomainName, SecurityPolicy
 from aws_cdk.aws_apigatewayv2 import HttpApi, HttpMethod, CfnAuthorizer, \
     CfnRoute, \
     HttpIntegration, HttpIntegrationType, PayloadFormatVersion, CfnStage, \
-    ApiMapping, CorsPreflightOptions
+    ApiMapping, CorsPreflightOptions, DomainMappingOptions, HttpStage
 from aws_cdk.aws_certificatemanager import Certificate, ValidationMethod
 from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
 from aws_cdk.aws_iam import Role, ServicePrincipal, PolicyStatement, \
@@ -355,22 +355,13 @@ class Shows(core.Stack):
                 source_arn=f"arn:aws:execute-api:{self.region}:{self.account}:{http_api.http_api_id}/*"
             )
 
-        stage = CfnStage(
+        HttpStage(
             self,
             "live",
-            api_id=http_api.http_api_id,
+            http_api=http_api,
             auto_deploy=True,
-            default_route_settings=CfnStage.RouteSettingsProperty(
-                throttling_burst_limit=10,
-                throttling_rate_limit=5
-            ),
-            stage_name="live"
-        )
-
-        ApiMapping(
-            self,
-            "mapping",
-            api=http_api,
-            domain_name=domain_name,
-            stage=stage
+            stage_name="live",
+            domain_mapping=DomainMappingOptions(
+                domain_name=domain_name,
+            )
         )
