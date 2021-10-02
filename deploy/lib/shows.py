@@ -10,13 +10,13 @@ from aws_cdk.aws_apigatewayv2 import HttpApi, HttpMethod, CfnAuthorizer, \
     DomainName
 from aws_cdk.aws_certificatemanager import Certificate, ValidationMethod
 from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
+from aws_cdk.aws_events import Schedule, Rule
 from aws_cdk.aws_iam import Role, ServicePrincipal, PolicyStatement, \
     ManagedPolicy
 from aws_cdk.aws_lambda import LayerVersion, Code, Runtime, Function
 from aws_cdk.aws_sns import Topic
-from aws_cdk.aws_sqs import Queue
 from aws_cdk.core import Duration
-from aws_cdk.aws_lambda_event_sources import SnsEventSource
+from aws_cdk.aws_events_targets import LambdaFunction
 
 from lib.utils import clean_pycache
 
@@ -250,11 +250,13 @@ class Shows(core.Stack):
                     memory_size=lambda_config["memory"],
                 )
 
-                if name == "cron-update_eps":
-                    self.lambdas[name].add_event_source(SnsEventSource(
-                        self.show_updates_topic,
-                        dead_letter_queue=Queue(self, "update_eps_dlq"),
-                    ))
+        Rule(
+            self,
+            "update_eps",
+            schedule=Schedule.cron(hour="2", minute="10"),
+            targets=[
+                LambdaFunction(self.lambdas["cron-update_eps"])]
+        )
 
     def _create_gateway(self):
         cert = Certificate(
@@ -265,7 +267,7 @@ class Shows(core.Stack):
         )
         domain_name = DomainName(
             self,
-            "domain",
+            "domain_name",
             certificate=cert,
             domain_name=self.domain_name,
         )

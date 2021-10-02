@@ -14,6 +14,7 @@ aws-cdk.assets==1.125.0 \
     --hash=sha256:c677f1e3347ccbc1b3955a6545f6561294ce29b3985ef4ad53f81d6285a02a35 \
     --hash=sha256:d85b48a693b53581c4061dad7240d2b56e0d2ce2d9849b2e4ed1a3ef97abace5
     # via
+    #   aws-cdk.aws-codebuild
     #   aws-cdk.aws-ecr-assets
     #   aws-cdk.aws-s3-assets
 aws-cdk.aws-apigateway==1.125.0 \
@@ -21,7 +22,9 @@ aws-cdk.aws-apigateway==1.125.0 \
     --hash=sha256:b53ff050402a44c6b7db85867681e0619c664833da2dd674a17fff10e08e0ce4
     # via
     #   -r deploy/requirements.in
+    #   aws-cdk.aws-events-targets
     #   aws-cdk.aws-lambda-event-sources
+    #   aws-cdk.aws-route53-targets
 aws_cdk.aws_apigatewayv2==1.125.0 \
     --hash=sha256:5857c50e965223418d89acf585c24643e495b1eee7f8edca70387bfbc0917fc1 \
     --hash=sha256:f19bec84684a4288926f6dd96b398d4b1d570f51a55d3d1007377ce23678f11f
@@ -31,11 +34,24 @@ aws-cdk.aws-applicationautoscaling==1.125.0 \
     --hash=sha256:a8775e7a75b5aa24d704357d8ba82e217d692a1b2f026d66fb3aed6a6b147393
     # via
     #   aws-cdk.aws-dynamodb
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-lambda
+aws-cdk.aws-autoscaling==1.125.0 \
+    --hash=sha256:1b0c47a1381027fd4d9df5dc8745b39e6e78dbeee6516bed4d444afc30d02841 \
+    --hash=sha256:fcce8ff692efa22e776bda4685c77d7ade5979397ab09d6196b844f3d2ce16c9
+    # via
+    #   aws-cdk.aws-autoscaling-hooktargets
+    #   aws-cdk.aws-ecs
 aws-cdk.aws-autoscaling-common==1.125.0 \
     --hash=sha256:4c5d2b0c3cdb73c75e72883cd81f954adee89d77a356a86344947e4a68c0275a \
     --hash=sha256:848e0d3f479f5e8e03542b2c058025f95ba9ce66b90c82d761ae922939cee095
-    # via aws-cdk.aws-applicationautoscaling
+    # via
+    #   aws-cdk.aws-applicationautoscaling
+    #   aws-cdk.aws-autoscaling
+aws-cdk.aws-autoscaling-hooktargets==1.125.0 \
+    --hash=sha256:19fdee92d563b06da4acd414eda6d88aea54c62f017cbcfbf21394d552036e7c \
+    --hash=sha256:59f1979a509335cbbb507b432be317a0e9d94049977ae6ad689249e7364ff736
+    # via aws-cdk.aws-ecs
 aws_cdk.aws_certificatemanager==1.125.0 \
     --hash=sha256:31d8d89f3528426b192bf8e4fc3ea32ff980c04286d7f6212eddb1832d68cab8 \
     --hash=sha256:bbe61567c7262ec0cae62e1a65619e45c145f932267fc9bbec5e3ff87121feb0
@@ -44,11 +60,16 @@ aws_cdk.aws_certificatemanager==1.125.0 \
     #   aws-cdk.aws-apigateway
     #   aws-cdk.aws-apigatewayv2
     #   aws-cdk.aws-cognito
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-elasticloadbalancingv2
 aws-cdk.aws-cloudformation==1.125.0 \
     --hash=sha256:23062dc07afdb1539cc7924353ef631fab1f5dab19c6343a63b64f1988ebb9d4 \
     --hash=sha256:cdd95b1d489af6439373b147b958fb1da8b1d1fb20e91dd37465c4c0705a2cd2
     # via aws-cdk.custom-resources
+aws-cdk.aws-cloudfront==1.125.0 \
+    --hash=sha256:7c96ec9a3dc309c609d7db2389a95e06f544beb319750adb150757bbe81fa64f \
+    --hash=sha256:8b2c8ee02c1118b10ec5a35652b8e7e034d21736e82ec39aef6c9d907deb3e6d
+    # via aws-cdk.aws-route53-targets
 aws-cdk.aws-cloudwatch==1.125.0 \
     --hash=sha256:6e64223f112304866d2e7c51d932ea2391f841dd81d1462182b147874a801c1d \
     --hash=sha256:8603fda2dfcc22b673767619d9afe691b4bc3f6c159d4057b34a678d23003871
@@ -56,27 +77,50 @@ aws-cdk.aws-cloudwatch==1.125.0 \
     #   aws-cdk.aws-apigateway
     #   aws-cdk.aws-apigatewayv2
     #   aws-cdk.aws-applicationautoscaling
+    #   aws-cdk.aws-autoscaling
     #   aws-cdk.aws-certificatemanager
+    #   aws-cdk.aws-codebuild
     #   aws-cdk.aws-dynamodb
     #   aws-cdk.aws-ec2
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-elasticloadbalancingv2
     #   aws-cdk.aws-kinesis
+    #   aws-cdk.aws-kinesisfirehose
     #   aws-cdk.aws-lambda
     #   aws-cdk.aws-logs
     #   aws-cdk.aws-sns
     #   aws-cdk.aws-sqs
+    #   aws-cdk.aws-stepfunctions
+aws-cdk.aws-codebuild==1.125.0 \
+    --hash=sha256:9919618ce2d30bf6cd8ac23ad84c61655f4eb7fdcaab341f6e3630770c46fcc6 \
+    --hash=sha256:cf2b6085b0cd15f7829148af4038794bdea2dd417d301b655a6162f6938e77ad
+    # via aws-cdk.aws-events-targets
+aws-cdk.aws-codecommit==1.125.0 \
+    --hash=sha256:2ff279723f2e86bbc9fbb78d4bf916765d727a440fcef58c94f2ac910944d9ac \
+    --hash=sha256:44b0b78761625542ee3013e8748e24696b9236e776742a83eefdf3d71b6f32c3
+    # via aws-cdk.aws-codebuild
 aws-cdk.aws-codeguruprofiler==1.125.0 \
     --hash=sha256:9340f8082c08fc2c8d42f9cc8b5bd09580df099837bc2ca10e59f324d091d4c7 \
     --hash=sha256:96794267a59f9cbfb484e04fc22eb708f27eede196ba1eb54a75c3ad5415e0a1
     # via aws-cdk.aws-lambda
+aws-cdk.aws-codepipeline==1.125.0 \
+    --hash=sha256:100da838794dc51b7b6a0ee9d02396b773a17e83fa466db868b37a9e48e9f97e \
+    --hash=sha256:fd71340c68e7a1f7ad0bbdbb55d385477d3c09940f8b04f2b625e27c4ad83ada
+    # via aws-cdk.aws-events-targets
 aws-cdk.aws-codestarnotifications==1.125.0 \
     --hash=sha256:11e814db781911108044ed34d05c58f54aa521855642514e6abe3bae020f2887 \
     --hash=sha256:2f73164454a504592a12d062c1edd4bc6d404b3a2233a0db83a4c51bd43cd31b
-    # via aws-cdk.aws-sns
+    # via
+    #   aws-cdk.aws-codebuild
+    #   aws-cdk.aws-codecommit
+    #   aws-cdk.aws-codepipeline
+    #   aws-cdk.aws-sns
 aws-cdk.aws-cognito==1.125.0 \
     --hash=sha256:9e6440eea602c21dadadc89c7ce5fe943e90e073cbf48264a319661cbb72aed1 \
     --hash=sha256:d8a3dc3f3493473f14ce4e5d42af4373bc37ac655e68338939bb7db6a6fdd869
-    # via aws-cdk.aws-apigateway
+    # via
+    #   aws-cdk.aws-apigateway
+    #   aws-cdk.aws-route53-targets
 aws_cdk.aws_dynamodb==1.125.0 \
     --hash=sha256:2d319692028e7fdbb7c1f79aa7d128c70c93a254cb91f496596e3fe2071c0c11 \
     --hash=sha256:d83e26c2b9307a7331f5c5ad7db307eb53f4a2c65b180570fe7536e02f45fcff
@@ -89,40 +133,82 @@ aws-cdk.aws-ec2==1.125.0 \
     # via
     #   aws-cdk.aws-apigateway
     #   aws-cdk.aws-apigatewayv2
+    #   aws-cdk.aws-autoscaling
+    #   aws-cdk.aws-codebuild
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-efs
+    #   aws-cdk.aws-elasticloadbalancing
     #   aws-cdk.aws-elasticloadbalancingv2
+    #   aws-cdk.aws-events-targets
+    #   aws-cdk.aws-kinesisfirehose
     #   aws-cdk.aws-lambda
     #   aws-cdk.aws-lambda-event-sources
     #   aws-cdk.aws-route53
+    #   aws-cdk.aws-route53-targets
     #   aws-cdk.aws-secretsmanager
+    #   aws-cdk.aws-servicediscovery
     #   aws-cdk.custom-resources
 aws-cdk.aws-ecr==1.125.0 \
     --hash=sha256:196b22f85b797fe3d3592a2a22e180eae4c4819ce5c6f05d9090e2d0c84382e0 \
     --hash=sha256:4e46aa8ebeda0bfdad45f0d80b751ce2c1278612231011c38d20cb9272666c9c
     # via
+    #   aws-cdk.aws-codebuild
     #   aws-cdk.aws-ecr-assets
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-lambda
 aws-cdk.aws-ecr-assets==1.125.0 \
     --hash=sha256:49d0e04fd25dd4123720f9c2e94b6c4107b15f70df73b9ec90d094ce4e62ce98 \
     --hash=sha256:67e6b35c3e4844939e604b11dae3741e5f50679984d188cf86c6ae4b9943a203
-    # via aws-cdk.aws-lambda
+    # via
+    #   aws-cdk.aws-codebuild
+    #   aws-cdk.aws-ecs
+    #   aws-cdk.aws-lambda
+aws-cdk.aws-ecs==1.125.0 \
+    --hash=sha256:39e44d0f54e6dc263b47c337722f508cadaf2ab80968ad0290d252a098b1a686 \
+    --hash=sha256:4d14e04b4bf6f832311cbdcca918d6f52f4cf0b33e6308b1c66f723319c85d82
+    # via aws-cdk.aws-events-targets
 aws-cdk.aws-efs==1.125.0 \
     --hash=sha256:2ce6055163a717f69efeb2a988492b52a6aefac32ee82d8dd8e659fb87a20ec4 \
     --hash=sha256:a9606a6f535a0cda9687dd0c48dce0df61f750e557c2ea38ff2ec069045889b9
     # via aws-cdk.aws-lambda
+aws-cdk.aws-elasticloadbalancing==1.125.0 \
+    --hash=sha256:108397b9802fd16732fbd9534bb95bcc06d8cfd73abbcb1cb2a77e1dcdda6d88 \
+    --hash=sha256:9c3b9d35a46c085724e6b8fee2b4320985260630616a6908b2b760b7b52ca405
+    # via
+    #   aws-cdk.aws-autoscaling
+    #   aws-cdk.aws-ecs
+    #   aws-cdk.aws-route53-targets
 aws-cdk.aws-elasticloadbalancingv2==1.125.0 \
     --hash=sha256:30894b55405ea4dca42b8d80b10354188bcabe7bdf91fd62392ccf65c54116ba \
     --hash=sha256:5b495ef3d47ac1d347ca1f6ccd3f4559715189da3f0308ba2cb51ed24a61e487
-    # via aws-cdk.aws-apigateway
+    # via
+    #   aws-cdk.aws-apigateway
+    #   aws-cdk.aws-autoscaling
+    #   aws-cdk.aws-ecs
+    #   aws-cdk.aws-route53-targets
+    #   aws-cdk.aws-servicediscovery
 aws-cdk.aws-events==1.125.0 \
     --hash=sha256:1d8ef0208088ebf0a84d9b76d9548dfa121092ad0a12f55c78130ec2516f7dad \
     --hash=sha256:c0e20128f7ac88cbfa1e4b47137b54acd6fea95c0d4e4eba84be21e57e03154d
     # via
+    #   aws-cdk.aws-codebuild
+    #   aws-cdk.aws-codecommit
+    #   aws-cdk.aws-codepipeline
     #   aws-cdk.aws-ecr
+    #   aws-cdk.aws-events-targets
     #   aws-cdk.aws-lambda
     #   aws-cdk.aws-lambda-event-sources
     #   aws-cdk.aws-s3
     #   aws-cdk.aws-sns
+    #   aws-cdk.aws-stepfunctions
+aws_cdk.aws_events_targets==1.125.0 \
+    --hash=sha256:3a128294bcada219839aff7ce0c94ce16e3c94d85b24fd6f68bb9a305e2d700c \
+    --hash=sha256:bdc814cd6d5d0d4d2fa81ba6bd22d850f8da6f51feed01a5be07c614dfcda853
+    # via -r deploy/requirements.in
+aws-cdk.aws-globalaccelerator==1.125.0 \
+    --hash=sha256:3c4b6f9235706bc7958cd3cd6a3cea606340a5a778f0dc7c44c9199555b8e928 \
+    --hash=sha256:4062007a25d4ba16112078579e751e329ac2ee201d2c4af3ba0841cfbdb9f6bf
+    # via aws-cdk.aws-route53-targets
 aws_cdk.aws_iam==1.125.0 \
     --hash=sha256:4c581d72932e189a9ac73be67c62937c0b43c76f4b03c1e37f5358b7884cdc3a \
     --hash=sha256:d0ed757172c0a51809c306a1b80442ef71794271774588f1ff2389bca2c88436
@@ -131,25 +217,34 @@ aws_cdk.aws_iam==1.125.0 \
     #   aws-cdk.aws-apigateway
     #   aws-cdk.aws-apigatewayv2
     #   aws-cdk.aws-applicationautoscaling
+    #   aws-cdk.aws-autoscaling
     #   aws-cdk.aws-autoscaling-common
+    #   aws-cdk.aws-autoscaling-hooktargets
     #   aws-cdk.aws-certificatemanager
     #   aws-cdk.aws-cloudformation
     #   aws-cdk.aws-cloudwatch
+    #   aws-cdk.aws-codebuild
+    #   aws-cdk.aws-codecommit
     #   aws-cdk.aws-codeguruprofiler
+    #   aws-cdk.aws-codepipeline
     #   aws-cdk.aws-cognito
     #   aws-cdk.aws-dynamodb
     #   aws-cdk.aws-ec2
     #   aws-cdk.aws-ecr
     #   aws-cdk.aws-ecr-assets
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-efs
     #   aws-cdk.aws-elasticloadbalancingv2
     #   aws-cdk.aws-events
+    #   aws-cdk.aws-events-targets
     #   aws-cdk.aws-kinesis
+    #   aws-cdk.aws-kinesisfirehose
     #   aws-cdk.aws-kms
     #   aws-cdk.aws-lambda
     #   aws-cdk.aws-lambda-event-sources
     #   aws-cdk.aws-logs
     #   aws-cdk.aws-route53
+    #   aws-cdk.aws-route53-targets
     #   aws-cdk.aws-s3
     #   aws-cdk.aws-s3-assets
     #   aws-cdk.aws-s3-notifications
@@ -158,21 +253,34 @@ aws_cdk.aws_iam==1.125.0 \
     #   aws-cdk.aws-sns-subscriptions
     #   aws-cdk.aws-sqs
     #   aws-cdk.aws-ssm
+    #   aws-cdk.aws-stepfunctions
     #   aws-cdk.custom-resources
 aws-cdk.aws-kinesis==1.125.0 \
     --hash=sha256:e4cce7a10f8538f1ad493d9a17f23c6a57c32ec3ddf66ea438cb9faab2946607 \
     --hash=sha256:e87ff3132dd55f5e5bd6cf2f1100a5d7d0af17d38980d61d7953d0abe101b7ee
     # via
     #   aws-cdk.aws-dynamodb
+    #   aws-cdk.aws-events-targets
+    #   aws-cdk.aws-kinesisfirehose
     #   aws-cdk.aws-lambda-event-sources
+aws-cdk.aws-kinesisfirehose==1.125.0 \
+    --hash=sha256:05117b7e43ea7c24ec5d8656f02ad22353416088aa085e0e1f8ad57850fe0fdd \
+    --hash=sha256:8928acab06d7546520b60ffe399154b404b2add663e8b8a080b2e32e876ff5b0
+    # via aws-cdk.aws-events-targets
 aws-cdk.aws-kms==1.125.0 \
     --hash=sha256:08f5ba0f5df59a71631dad20ea6ee714e5829acac96542377327fbbbea6078c6 \
     --hash=sha256:301de25e1d2e3035c6bb6b3b5763a44e845ee1b9da411c3bf0637a70231a0d80
     # via
+    #   aws-cdk.aws-autoscaling-hooktargets
+    #   aws-cdk.aws-codebuild
+    #   aws-cdk.aws-codepipeline
     #   aws-cdk.aws-dynamodb
     #   aws-cdk.aws-ec2
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-efs
+    #   aws-cdk.aws-events-targets
     #   aws-cdk.aws-kinesis
+    #   aws-cdk.aws-kinesisfirehose
     #   aws-cdk.aws-lambda
     #   aws-cdk.aws-logs
     #   aws-cdk.aws-s3
@@ -188,11 +296,15 @@ aws_cdk.aws_lambda==1.125.0 \
     # via
     #   -r deploy/requirements.in
     #   aws-cdk.aws-apigateway
+    #   aws-cdk.aws-autoscaling-hooktargets
     #   aws-cdk.aws-certificatemanager
     #   aws-cdk.aws-cloudformation
     #   aws-cdk.aws-cognito
     #   aws-cdk.aws-dynamodb
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-elasticloadbalancingv2
+    #   aws-cdk.aws-events-targets
+    #   aws-cdk.aws-kinesisfirehose
     #   aws-cdk.aws-lambda-event-sources
     #   aws-cdk.aws-s3-notifications
     #   aws-cdk.aws-secretsmanager
@@ -207,15 +319,28 @@ aws-cdk.aws-logs==1.125.0 \
     --hash=sha256:c20fdf008fb0d1bb1235a720fa80f113c83a901360add48dda8c682d11d70039
     # via
     #   aws-cdk.aws-apigateway
+    #   aws-cdk.aws-codebuild
     #   aws-cdk.aws-ec2
+    #   aws-cdk.aws-ecs
+    #   aws-cdk.aws-events-targets
     #   aws-cdk.aws-kinesis
+    #   aws-cdk.aws-kinesisfirehose
     #   aws-cdk.aws-lambda
     #   aws-cdk.aws-route53
+    #   aws-cdk.aws-stepfunctions
     #   aws-cdk.custom-resources
 aws-cdk.aws-route53==1.125.0 \
     --hash=sha256:54f51de8a9d742f02019b1ada1e42f409a21a97d33ecd499cd66a41d0e0cda43 \
     --hash=sha256:e60c6f5c4906052eaa05e67ac0b7ffa5667a988de5976b8502c44b860282312f
-    # via aws-cdk.aws-certificatemanager
+    # via
+    #   aws-cdk.aws-certificatemanager
+    #   aws-cdk.aws-ecs
+    #   aws-cdk.aws-route53-targets
+    #   aws-cdk.aws-servicediscovery
+aws-cdk.aws-route53-targets==1.125.0 \
+    --hash=sha256:3b1d952b1e05192fba9311d5dffd5ef5882b46b1ddfdf82de8a1d0a9d86e6685 \
+    --hash=sha256:892c97789f678d880e6b65d39569a65950279f11dca0ebfa48acd0de12d976ca
+    # via aws-cdk.aws-ecs
 aws_cdk.aws_s3==1.125.0 \
     --hash=sha256:b758343dd276fac53639e4cd290ca17cafd0f673e0b3c89131cb95dd505327d7 \
     --hash=sha256:e42b54f6d9443903cc93b18f135288ce99f8da7ef31d6b360c668afc1bdc1059
@@ -223,19 +348,27 @@ aws_cdk.aws_s3==1.125.0 \
     #   -r deploy/requirements.in
     #   aws-cdk.aws-apigateway
     #   aws-cdk.aws-cloudformation
+    #   aws-cdk.aws-codebuild
+    #   aws-cdk.aws-codepipeline
     #   aws-cdk.aws-ec2
     #   aws-cdk.aws-ecr-assets
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-elasticloadbalancingv2
+    #   aws-cdk.aws-kinesisfirehose
     #   aws-cdk.aws-lambda
     #   aws-cdk.aws-lambda-event-sources
+    #   aws-cdk.aws-route53-targets
     #   aws-cdk.aws-s3-assets
     #   aws-cdk.aws-s3-notifications
+    #   aws-cdk.aws-stepfunctions
 aws-cdk.aws-s3-assets==1.125.0 \
     --hash=sha256:108d97c42d13d590d634fab2fe20a7ae30aa7f45aa9aece7408d7d5cea80777e \
     --hash=sha256:e2ff8d7517f4fc7bc4bd9492cf18224483ea59b7500683e5d9e170cc6dd2ff87
     # via
     #   aws-cdk.aws-apigateway
+    #   aws-cdk.aws-codebuild
     #   aws-cdk.aws-ec2
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-lambda
     #   aws-cdk.aws-logs
 aws-cdk.aws-s3-notifications==1.125.0 \
@@ -249,7 +382,14 @@ aws-cdk.aws-sam==1.125.0 \
 aws-cdk.aws-secretsmanager==1.125.0 \
     --hash=sha256:537213c00385e073db526e5261166c2d0beb41032d300526ec3bf6196bc79e23 \
     --hash=sha256:f30e775601b2b511e14b7ca3af440ccd4e35d02f1f6e311920e4500de5a57a8b
-    # via aws-cdk.aws-lambda-event-sources
+    # via
+    #   aws-cdk.aws-codebuild
+    #   aws-cdk.aws-ecs
+    #   aws-cdk.aws-lambda-event-sources
+aws-cdk.aws-servicediscovery==1.125.0 \
+    --hash=sha256:025d9b95e6275dff562acab35dc38d9aaaf294d0ab70b89fe31e42ddfb551b77 \
+    --hash=sha256:7ace6745e22619d15c7227b749ba28bd705dd56c0b19efe0c4134287e5d2b356
+    # via aws-cdk.aws-ecs
 aws-cdk.aws-signer==1.125.0 \
     --hash=sha256:d3189267c601cca892ce7e514bfcd57a4f9f41188cf2dc0eee967848dbb687ef \
     --hash=sha256:d59f9cef72676da435393bcb24b432d9610cab9fe10ec38288848de4e675a6ba
@@ -258,7 +398,11 @@ aws-cdk.aws-sns==1.125.0 \
     --hash=sha256:915ece55344cd479573929704563d03139ede11bd9fbafa3fef0f5efc432d920 \
     --hash=sha256:b93eea1ef9c5a93ed5923f4508aff7303f3d80e5cb90fee73366037a1d53cff6
     # via
+    #   aws-cdk.aws-autoscaling
+    #   aws-cdk.aws-autoscaling-hooktargets
     #   aws-cdk.aws-cloudformation
+    #   aws-cdk.aws-ecs
+    #   aws-cdk.aws-events-targets
     #   aws-cdk.aws-lambda-event-sources
     #   aws-cdk.aws-s3-notifications
     #   aws-cdk.aws-sns-subscriptions
@@ -266,11 +410,17 @@ aws-cdk.aws-sns==1.125.0 \
 aws-cdk.aws-sns-subscriptions==1.125.0 \
     --hash=sha256:095cedda51f85452ee5c9e975ea5dfd62d39af33f5f2dbc1e3d4be95ebad5c7f \
     --hash=sha256:285352babe8f4779103e1c93fe07926c2b6d104d47222e64c2b59ddd59486458
-    # via aws-cdk.aws-lambda-event-sources
+    # via
+    #   aws-cdk.aws-autoscaling-hooktargets
+    #   aws-cdk.aws-events-targets
+    #   aws-cdk.aws-lambda-event-sources
 aws-cdk.aws-sqs==1.125.0 \
     --hash=sha256:06594361c2650a49d899b99c68bcfb04200c703793ae82e81945dae587a5934e \
     --hash=sha256:6d1919a04e7269c82b11275f17ad8e832509929bc43cb494cba9cee507c2c3bf
     # via
+    #   aws-cdk.aws-autoscaling-hooktargets
+    #   aws-cdk.aws-ecs
+    #   aws-cdk.aws-events-targets
     #   aws-cdk.aws-lambda
     #   aws-cdk.aws-lambda-event-sources
     #   aws-cdk.aws-s3-notifications
@@ -279,7 +429,13 @@ aws-cdk.aws-sqs==1.125.0 \
 aws-cdk.aws-ssm==1.125.0 \
     --hash=sha256:08ef84379c22c51473f21ea803489ea25de14358c88f8934d57a33dae947480a \
     --hash=sha256:b9cbbfab0acacc7f6fcd5fadf41a68a95f971bac1f9f768c2c1c5b7847f4cb05
-    # via aws-cdk.aws-ec2
+    # via
+    #   aws-cdk.aws-ec2
+    #   aws-cdk.aws-ecs
+aws-cdk.aws-stepfunctions==1.125.0 \
+    --hash=sha256:279f892064d7a7f624122156be119318bc12119be8d1a8b8d98d28d691daa24f \
+    --hash=sha256:d414cad23b78840a3d87ce95e5b4cdf0602e4fa41353a978f499818e848118a9
+    # via aws-cdk.aws-events-targets
 aws-cdk.cloud-assembly-schema==1.125.0 \
     --hash=sha256:a13c5d27953127372abd292e78f7137d777f7e807b2c49426021eadd9cf1c755 \
     --hash=sha256:ae4b3b3c5b797e82f5d22b233cfd90e4e8676359d8fdea4cf5573355d5af4f1e
@@ -301,37 +457,49 @@ aws-cdk.core==1.125.0 \
     #   aws-cdk.aws-apigateway
     #   aws-cdk.aws-apigatewayv2
     #   aws-cdk.aws-applicationautoscaling
+    #   aws-cdk.aws-autoscaling
     #   aws-cdk.aws-autoscaling-common
+    #   aws-cdk.aws-autoscaling-hooktargets
     #   aws-cdk.aws-certificatemanager
     #   aws-cdk.aws-cloudformation
     #   aws-cdk.aws-cloudwatch
+    #   aws-cdk.aws-codebuild
+    #   aws-cdk.aws-codecommit
     #   aws-cdk.aws-codeguruprofiler
+    #   aws-cdk.aws-codepipeline
     #   aws-cdk.aws-codestarnotifications
     #   aws-cdk.aws-cognito
     #   aws-cdk.aws-dynamodb
     #   aws-cdk.aws-ec2
     #   aws-cdk.aws-ecr
     #   aws-cdk.aws-ecr-assets
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-efs
+    #   aws-cdk.aws-elasticloadbalancing
     #   aws-cdk.aws-elasticloadbalancingv2
     #   aws-cdk.aws-events
+    #   aws-cdk.aws-events-targets
     #   aws-cdk.aws-iam
     #   aws-cdk.aws-kinesis
+    #   aws-cdk.aws-kinesisfirehose
     #   aws-cdk.aws-kms
     #   aws-cdk.aws-lambda
     #   aws-cdk.aws-lambda-event-sources
     #   aws-cdk.aws-logs
     #   aws-cdk.aws-route53
+    #   aws-cdk.aws-route53-targets
     #   aws-cdk.aws-s3
     #   aws-cdk.aws-s3-assets
     #   aws-cdk.aws-s3-notifications
     #   aws-cdk.aws-sam
     #   aws-cdk.aws-secretsmanager
+    #   aws-cdk.aws-servicediscovery
     #   aws-cdk.aws-signer
     #   aws-cdk.aws-sns
     #   aws-cdk.aws-sns-subscriptions
     #   aws-cdk.aws-sqs
     #   aws-cdk.aws-ssm
+    #   aws-cdk.aws-stepfunctions
     #   aws-cdk.custom-resources
 aws-cdk.custom-resources==1.125.0 \
     --hash=sha256:1bcbda91dcc37c24f2eba3ca9a80048f34e449d6f98067fe19d96732b8e95d5f \
@@ -339,6 +507,7 @@ aws-cdk.custom-resources==1.125.0 \
     # via
     #   aws-cdk.aws-cognito
     #   aws-cdk.aws-dynamodb
+    #   aws-cdk.aws-events-targets
     #   aws-cdk.aws-route53
 aws-cdk.cx-api==1.125.0 \
     --hash=sha256:9eda704ad6c1a21be1ac0f2cedba53706d2f08101f8b72c6a62095517cdc6696 \
@@ -349,6 +518,7 @@ aws-cdk.cx-api==1.125.0 \
     #   aws-cdk.aws-cloudformation
     #   aws-cdk.aws-ec2
     #   aws-cdk.aws-ecr-assets
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-efs
     #   aws-cdk.aws-elasticloadbalancingv2
     #   aws-cdk.aws-kms
@@ -361,10 +531,13 @@ aws-cdk.region-info==1.125.0 \
     --hash=sha256:18f6042e4745a9857b0f99bcfa2638ed254ffb54c7002637d6e43c94e5640773 \
     --hash=sha256:932a0ea714d3bd11ba33692a4c19fa5616e8855fc619176f305bbe4f3f2f73da
     # via
+    #   aws-cdk.aws-codebuild
     #   aws-cdk.aws-ec2
     #   aws-cdk.aws-elasticloadbalancingv2
     #   aws-cdk.aws-iam
+    #   aws-cdk.aws-kinesisfirehose
     #   aws-cdk.aws-lambda
+    #   aws-cdk.aws-route53-targets
     #   aws-cdk.core
 cattrs==1.8.0 \
     --hash=sha256:5c121ab06a7cac494813c228721a7feb5a6423b17316eeaebf13f5a03e5b0d53 \
@@ -378,37 +551,49 @@ constructs==3.3.156 \
     #   aws-cdk.aws-apigateway
     #   aws-cdk.aws-apigatewayv2
     #   aws-cdk.aws-applicationautoscaling
+    #   aws-cdk.aws-autoscaling
     #   aws-cdk.aws-autoscaling-common
+    #   aws-cdk.aws-autoscaling-hooktargets
     #   aws-cdk.aws-certificatemanager
     #   aws-cdk.aws-cloudformation
     #   aws-cdk.aws-cloudwatch
+    #   aws-cdk.aws-codebuild
+    #   aws-cdk.aws-codecommit
     #   aws-cdk.aws-codeguruprofiler
+    #   aws-cdk.aws-codepipeline
     #   aws-cdk.aws-codestarnotifications
     #   aws-cdk.aws-cognito
     #   aws-cdk.aws-dynamodb
     #   aws-cdk.aws-ec2
     #   aws-cdk.aws-ecr
     #   aws-cdk.aws-ecr-assets
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-efs
+    #   aws-cdk.aws-elasticloadbalancing
     #   aws-cdk.aws-elasticloadbalancingv2
     #   aws-cdk.aws-events
+    #   aws-cdk.aws-events-targets
     #   aws-cdk.aws-iam
     #   aws-cdk.aws-kinesis
+    #   aws-cdk.aws-kinesisfirehose
     #   aws-cdk.aws-kms
     #   aws-cdk.aws-lambda
     #   aws-cdk.aws-lambda-event-sources
     #   aws-cdk.aws-logs
     #   aws-cdk.aws-route53
+    #   aws-cdk.aws-route53-targets
     #   aws-cdk.aws-s3
     #   aws-cdk.aws-s3-assets
     #   aws-cdk.aws-s3-notifications
     #   aws-cdk.aws-sam
     #   aws-cdk.aws-secretsmanager
+    #   aws-cdk.aws-servicediscovery
     #   aws-cdk.aws-signer
     #   aws-cdk.aws-sns
     #   aws-cdk.aws-sns-subscriptions
     #   aws-cdk.aws-sqs
     #   aws-cdk.aws-ssm
+    #   aws-cdk.aws-stepfunctions
     #   aws-cdk.core
     #   aws-cdk.custom-resources
 jsii==1.35.0 \
@@ -419,37 +604,49 @@ jsii==1.35.0 \
     #   aws-cdk.aws-apigateway
     #   aws-cdk.aws-apigatewayv2
     #   aws-cdk.aws-applicationautoscaling
+    #   aws-cdk.aws-autoscaling
     #   aws-cdk.aws-autoscaling-common
+    #   aws-cdk.aws-autoscaling-hooktargets
     #   aws-cdk.aws-certificatemanager
     #   aws-cdk.aws-cloudformation
     #   aws-cdk.aws-cloudwatch
+    #   aws-cdk.aws-codebuild
+    #   aws-cdk.aws-codecommit
     #   aws-cdk.aws-codeguruprofiler
+    #   aws-cdk.aws-codepipeline
     #   aws-cdk.aws-codestarnotifications
     #   aws-cdk.aws-cognito
     #   aws-cdk.aws-dynamodb
     #   aws-cdk.aws-ec2
     #   aws-cdk.aws-ecr
     #   aws-cdk.aws-ecr-assets
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-efs
+    #   aws-cdk.aws-elasticloadbalancing
     #   aws-cdk.aws-elasticloadbalancingv2
     #   aws-cdk.aws-events
+    #   aws-cdk.aws-events-targets
     #   aws-cdk.aws-iam
     #   aws-cdk.aws-kinesis
+    #   aws-cdk.aws-kinesisfirehose
     #   aws-cdk.aws-kms
     #   aws-cdk.aws-lambda
     #   aws-cdk.aws-lambda-event-sources
     #   aws-cdk.aws-logs
     #   aws-cdk.aws-route53
+    #   aws-cdk.aws-route53-targets
     #   aws-cdk.aws-s3
     #   aws-cdk.aws-s3-assets
     #   aws-cdk.aws-s3-notifications
     #   aws-cdk.aws-sam
     #   aws-cdk.aws-secretsmanager
+    #   aws-cdk.aws-servicediscovery
     #   aws-cdk.aws-signer
     #   aws-cdk.aws-sns
     #   aws-cdk.aws-sns-subscriptions
     #   aws-cdk.aws-sqs
     #   aws-cdk.aws-ssm
+    #   aws-cdk.aws-stepfunctions
     #   aws-cdk.cloud-assembly-schema
     #   aws-cdk.core
     #   aws-cdk.custom-resources
@@ -464,37 +661,49 @@ publication==0.0.3 \
     #   aws-cdk.aws-apigateway
     #   aws-cdk.aws-apigatewayv2
     #   aws-cdk.aws-applicationautoscaling
+    #   aws-cdk.aws-autoscaling
     #   aws-cdk.aws-autoscaling-common
+    #   aws-cdk.aws-autoscaling-hooktargets
     #   aws-cdk.aws-certificatemanager
     #   aws-cdk.aws-cloudformation
     #   aws-cdk.aws-cloudwatch
+    #   aws-cdk.aws-codebuild
+    #   aws-cdk.aws-codecommit
     #   aws-cdk.aws-codeguruprofiler
+    #   aws-cdk.aws-codepipeline
     #   aws-cdk.aws-codestarnotifications
     #   aws-cdk.aws-cognito
     #   aws-cdk.aws-dynamodb
     #   aws-cdk.aws-ec2
     #   aws-cdk.aws-ecr
     #   aws-cdk.aws-ecr-assets
+    #   aws-cdk.aws-ecs
     #   aws-cdk.aws-efs
+    #   aws-cdk.aws-elasticloadbalancing
     #   aws-cdk.aws-elasticloadbalancingv2
     #   aws-cdk.aws-events
+    #   aws-cdk.aws-events-targets
     #   aws-cdk.aws-iam
     #   aws-cdk.aws-kinesis
+    #   aws-cdk.aws-kinesisfirehose
     #   aws-cdk.aws-kms
     #   aws-cdk.aws-lambda
     #   aws-cdk.aws-lambda-event-sources
     #   aws-cdk.aws-logs
     #   aws-cdk.aws-route53
+    #   aws-cdk.aws-route53-targets
     #   aws-cdk.aws-s3
     #   aws-cdk.aws-s3-assets
     #   aws-cdk.aws-s3-notifications
     #   aws-cdk.aws-sam
     #   aws-cdk.aws-secretsmanager
+    #   aws-cdk.aws-servicediscovery
     #   aws-cdk.aws-signer
     #   aws-cdk.aws-sns
     #   aws-cdk.aws-sns-subscriptions
     #   aws-cdk.aws-sqs
     #   aws-cdk.aws-ssm
+    #   aws-cdk.aws-stepfunctions
     #   aws-cdk.cloud-assembly-schema
     #   aws-cdk.core
     #   aws-cdk.custom-resources

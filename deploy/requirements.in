@@ -7,5 +7,6 @@ aws-cdk.aws-apigateway==1.125.0
 aws_cdk.aws_apigatewayv2==1.125.0
 aws_cdk.aws_certificatemanager==1.125.0
 aws_cdk.aws_lambda_event_sources==1.125.0
+aws_cdk.aws_events_targets==1.125.0
 
 wheel
