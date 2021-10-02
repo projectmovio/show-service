@@ -151,6 +151,26 @@ class Shows(core.Stack):
                 "timeout": 3,
                 "memory": 128
             },
+            "cron-update_eps": {
+                "layers": ["utils", "databases", "api"],
+                "variables": {
+                    "SHOWS_DATABASE_NAME": self.episodes_table.table_name,
+                    "LOG_LEVEL": "INFO",
+                    "UPDATES_TOPIC_ARN": self.show_updates_topic.topic_arn,
+                },
+                "policies": [
+                    PolicyStatement(
+                        actions=["dynamodb:GetItem"],
+                        resources=[self.episodes_table.table_arn],
+                    ),
+                    PolicyStatement(
+                        actions=["sns:Publish"],
+                        resources=[self.show_updates_topic.topic_arn],
+                    )
+                ],
+                "timeout": 3,
+                "memory": 128
+            },
         }
 
     def _create_layers(self):
