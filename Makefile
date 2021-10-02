@@ -3,6 +3,7 @@ test:
 	pip install -U -r test/unittest/requirements.txt
 	pip install -U -r src/layers/databases/requirements.txt
 	pip install -U -r src/layers/utils/requirements.txt
+	pip install -U -r src/layers/api/requirements.txt
 	PYTHONPATH=./src/layers/utils/python:./src/lambdas/:./src/layers/databases/python:./src/layers/api/python \
 		pytest test/unittest --cov-report html --cov=src -vv
 
