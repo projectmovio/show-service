@@ -255,7 +255,7 @@ class Shows(core.Stack):
             "update_eps",
             schedule=Schedule.cron(hour="2", minute="10"),
             targets=[
-                LambdaFunction(self.lambdas["crons-titles_updater"])]
+                LambdaFunction(self.lambdas["cron-update_eps"])]
         )
 
     def _create_gateway(self):
