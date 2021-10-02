@@ -1,4 +1,5 @@
 import shows_db
+import updates
 from tvmaze import TvMazeApi
 
 
@@ -14,5 +15,6 @@ def handle(event, context):
             continue
 
         # Post to SNS topic
+        updates.publish_show_update("tvmaze", tvmaze_id)
 
 
