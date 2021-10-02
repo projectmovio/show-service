@@ -4,8 +4,10 @@ import subprocess
 
 from aws_cdk import core
 from aws_cdk.aws_apigateway import DomainName, SecurityPolicy
-from aws_cdk.aws_apigatewayv2 import HttpApi, HttpMethod, CfnAuthorizer, CfnRoute, \
-    HttpIntegration, HttpIntegrationType, PayloadFormatVersion, CfnStage, HttpApiMapping, CorsPreflightOptions
+from aws_cdk.aws_apigatewayv2 import HttpApi, HttpMethod, CfnAuthorizer, \
+    CfnRoute, \
+    HttpIntegration, HttpIntegrationType, PayloadFormatVersion, CfnStage, \
+    CorsPreflightOptions, ApiMapping
 from aws_cdk.aws_certificatemanager import Certificate, ValidationMethod
 from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
 from aws_cdk.aws_iam import Role, ServicePrincipal, PolicyStatement, ManagedPolicy
@@ -258,7 +260,7 @@ class Shows(core.Stack):
             "domain",
             domain_name=self.domain_name,
             certificate=cert,
-            security_policy=SecurityPolicy.TLS_1_2
+            security_policy=SecurityPolicy.TLS_1_2,
         )
 
         http_api = HttpApi(
@@ -357,7 +359,7 @@ class Shows(core.Stack):
             stage_name="live"
         )
 
-        HttpApiMapping(
+        ApiMapping(
             self,
             "mapping",
             api=http_api,
