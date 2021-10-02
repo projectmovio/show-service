@@ -3,11 +3,11 @@ import shutil
 import subprocess
 
 from aws_cdk import core
-from aws_cdk.aws_apigatewayv2 import HttpApi, HttpMethod, CfnAuthorizer, \
+from aws_cdk.aws_apigatewayv2 import HttpApi, HttpMethod, \
     CfnRoute, \
     HttpIntegration, HttpIntegrationType, PayloadFormatVersion, \
     CorsPreflightOptions, DomainMappingOptions, HttpStage, \
-    DomainName
+    DomainName, HttpAuthorizer
 from aws_cdk.aws_certificatemanager import Certificate, ValidationMethod
 from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
 from aws_cdk.aws_events import Schedule, Rule
@@ -284,19 +284,6 @@ class Shows(core.Stack):
             )
         )
 
-        authorizer = CfnAuthorizer(
-            self,
-            "cognito",
-            api_id=http_api.http_api_id,
-            authorizer_type="JWT",
-            identity_source=["$request.header.Authorization"],
-            name="cognito",
-            jwt_configuration=CfnAuthorizer.JWTConfigurationProperty(
-                audience=["68v5rahd0sdvrmf7fgbq2o1a9u"],
-                issuer="https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_sJ3Y4kSv6"
-            )
-        )
-
         routes = {
             "get_shows": {
                 "method": "GET",
@@ -345,8 +332,7 @@ class Shows(core.Stack):
                 r,
                 api_id=http_api.http_api_id,
                 route_key=f"{routes[r]['method']} {routes[r]['route']}",
-                authorization_type="JWT",
-                authorizer_id=authorizer.ref,
+                authorization_type="AWS_IAM",
                 target="integrations/" + integration.integration_id
             )
 
