@@ -332,7 +332,7 @@ class Shows(core.Stack):
                 r,
                 api_id=http_api.http_api_id,
                 route_key=f"{routes[r]['method']} {routes[r]['route']}",
-                authorization_type="AWS_IAM",
+                # authorization_type="AWS_IAM",   # TODO: add back when: https://github.com/aws/aws-cdk/pull/14853 gets merged (set this manually for now)
                 target="integrations/" + integration.integration_id
             )
 
