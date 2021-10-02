@@ -267,7 +267,7 @@ class Shows(core.Stack):
         )
         domain_name = DomainName(
             self,
-            "domain",
+            "domain_name",
             certificate=cert,
             domain_name=self.domain_name,
         )
