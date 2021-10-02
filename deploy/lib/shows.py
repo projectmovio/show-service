@@ -4,10 +4,9 @@ import subprocess
 
 from aws_cdk import core
 from aws_cdk.aws_apigatewayv2 import HttpApi, HttpMethod, \
-    CfnRoute, \
     HttpIntegration, HttpIntegrationType, PayloadFormatVersion, \
     CorsPreflightOptions, DomainMappingOptions, HttpStage, \
-    DomainName, HttpAuthorizer, HttpRoute
+    DomainName, HttpRoute
 from aws_cdk.aws_certificatemanager import Certificate, ValidationMethod
 from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
 from aws_cdk.aws_events import Schedule, Rule
