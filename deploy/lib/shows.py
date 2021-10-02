@@ -4,9 +4,10 @@ import subprocess
 
 from aws_cdk import core
 from aws_cdk.aws_apigatewayv2 import HttpApi, HttpMethod, \
+    CfnRoute, \
     HttpIntegration, HttpIntegrationType, PayloadFormatVersion, \
     CorsPreflightOptions, DomainMappingOptions, HttpStage, \
-    DomainName, HttpRoute
+    DomainName, HttpAuthorizer
 from aws_cdk.aws_certificatemanager import Certificate, ValidationMethod
 from aws_cdk.aws_dynamodb import Table, Attribute, AttributeType, BillingMode
 from aws_cdk.aws_events import Schedule, Rule
@@ -326,13 +327,13 @@ class Shows(core.Stack):
                 method=getattr(HttpMethod, routes[r]["method"]),
                 payload_format_version=PayloadFormatVersion.VERSION_2_0,
             )
-            HttpRoute(
+            CfnRoute(
                 self,
                 r,
-                http_api=http_api,
+                api_id=http_api.http_api_id,
                 route_key=f"{routes[r]['method']} {routes[r]['route']}",
                 authorization_type="AWS_IAM",
-                integration=integration,
+                target="integrations/" + integration.integration_id
             )
 
             routes[r]["target_lambda"].add_permission(
