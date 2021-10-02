@@ -160,7 +160,7 @@ class Shows(core.Stack):
                 "memory": 128
             },
             "cron-update_eps": {
-                "layers": ["utils", "databases", "api"],
+                "layers": ["utils", "databases", "api", "publishers"],
                 "variables": {
                     "SHOWS_DATABASE_NAME": self.episodes_table.table_name,
                     "LOG_LEVEL": "INFO",
