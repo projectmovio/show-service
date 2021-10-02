@@ -42,9 +42,9 @@ class TvMazeApi:
 
         for e in episodes:
             if e["type"] == "regular":
-                ep_count = 1
+                ep_count += 1
             else:
-                special_count = 1
+                special_count += 1
 
         return {
             "ep_count": ep_count,
