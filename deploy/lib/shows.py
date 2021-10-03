@@ -81,7 +81,7 @@ class Shows(core.Stack):
     def _create_lambdas_config(self):
         self.lambdas_config = {
             "api-shows_by_id": {
-                "layers": ["utils", "databases"],
+                "layers": ["utils", "databases", "api"],
                 "variables": {
                     "SHOWS_DATABASE_NAME": self.shows_table.table_name,
                     "LOG_LEVEL": "INFO",
@@ -116,7 +116,7 @@ class Shows(core.Stack):
                 "memory": 128
             },
             "api-episodes": {
-                "layers": ["utils", "databases"],
+                "layers": ["utils", "databases", "api"],
                 "variables": {
                     "SHOWS_DATABASE_NAME": self.shows_table.table_name,
                     "SHOW_EPISODES_DATABASE_NAME": self.episodes_table.table_name,
@@ -145,7 +145,7 @@ class Shows(core.Stack):
                 "memory": 128
             },
             "api-episodes_by_id": {
-                "layers": ["utils", "databases"],
+                "layers": ["utils", "databases", "api"],
                 "variables": {
                     "SHOW_EPISODES_DATABASE_NAME": self.episodes_table.table_name,
                     "LOG_LEVEL": "INFO",
