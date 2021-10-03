@@ -7,6 +7,7 @@ import episodes_db
 import logger
 import schema
 import shows_db
+from api.shows import tvmaze_api
 
 sqs_queue = None
 
@@ -121,6 +122,8 @@ def _get_episode_by_api_id(query_params):
     if api_name in ["tvmaze"]:
         try:
             res = episodes_db.get_episode_by_api_id(api_name, api_id)
+            api_res = tvmaze_api.get_episode(res["tvmaze_id"])
+            res = {**res, **api_res}
             return {
                 "statusCode": 200,
                 "body": json.dumps(res, cls=decimal_encoder.DecimalEncoder)
