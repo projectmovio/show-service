@@ -14,6 +14,8 @@ def _get_topic():
         sns = boto3.resource("sns")
         topic = sns.Topic(TOPIC_ARN)
 
+    return topic
+
 
 def publish_show_update(api_name, api_id):
     _get_topic().publish(
