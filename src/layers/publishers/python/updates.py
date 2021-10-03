@@ -16,7 +16,7 @@ def _get_topic():
 
 
 def publish_show_update(api_name, api_id):
-    topic.publish(
+    _get_topic().publish(
         Message={
             "api_name": api_name,
             "api_id": api_id,
