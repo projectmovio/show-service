@@ -176,8 +176,8 @@ class Shows(core.Stack):
                         resources=[self.show_updates_topic.topic_arn],
                     )
                 ],
-                "timeout": 3,
-                "memory": 128
+                "timeout": 60,
+                "memory": 1024
             },
         }
 
