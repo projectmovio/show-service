@@ -26,6 +26,13 @@ class TvMazeApi:
             raise HTTPError(f"Unexpected status code: {res.status_code}")
         return res.json()
 
+    def get_episode(self, episode_id):
+        res = requests.get(f"{self.base_url}/episodes/{episode_id}")
+
+        if res.status_code != 200:
+            raise HTTPError(f"Unexpected status code: {res.status_code}")
+        return res.json()
+
     def get_day_updates(self):
         res = requests.get(f"{self.base_url}/updates/shows?since=day")
         if res.status_code != 200:
