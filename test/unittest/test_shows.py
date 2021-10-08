@@ -41,6 +41,8 @@ class TestPost:
         assert res_body["id"] == "cf1ffb71-48c3-53c0-9966-900cc5e5553e"
         assert res_body["tvmaze_id"] == "123"
         assert res_body["name"] == "Lost"  # From real tvmaze api
+        assert res_body["ep_count"] == 121
+        assert res_body["special_count"] == 29
 
     def test_already_exist(self, mocked_shows_db):
         mocked_shows_db.table.query.return_value = {
@@ -60,6 +62,8 @@ class TestPost:
         assert res_body["id"] == "cf1ffb71-48c3-53c0-9966-900cc5e5553e"
         assert res_body["tvmaze_id"] == "123"
         assert res_body["name"] == "Lost"  # From real tvmaze api
+        assert res_body["ep_count"] == 121
+        assert res_body["special_count"] == 29
 
     def test_no_body(self, mocked_shows_db):
         mocked_shows_db.table.query.return_value = {

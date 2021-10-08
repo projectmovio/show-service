@@ -70,6 +70,7 @@ def _post_tvmaze(tvmaze_id):
     try:
         api_res = tvmaze_api.get_show(tvmaze_id)
         del api_res["id"]
+        ep_count = tvmaze_api.get_show_episodes_count(tvmaze_id)
     except tvmaze_api.HTTPError:
         return {
             "statusCode": 404
@@ -86,12 +87,12 @@ def _post_tvmaze(tvmaze_id):
     else:
         return {
             "statusCode": 200,
-            "body": json.dumps({**res, **api_res}),
+            "body": json.dumps({**res, **api_res, **ep_count}),
         }
 
     return {
         "statusCode": 200,
-        "body": json.dumps({**res, **api_res}),
+        "body": json.dumps({**res, **api_res, **ep_count}),
     }
 
 
