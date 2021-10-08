@@ -21,7 +21,7 @@ def handle(event, context):
     try:
         res = shows_db.get_show_by_id(show_id)
 
-        if "api_name" in query_params:
+        if query_params is not None and "api_name" in query_params:
             if query_params["api_name"] == "tvmaze" and "tvmaze_id" in res:
                 api_res = tvmaze_api.get_show(res["tvmaze_id"])
                 ep_count = tvmaze_api.get_show_episodes_count(res["tvmaze_id"])

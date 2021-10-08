@@ -113,6 +113,7 @@ def _get_show_by_api_id(query_params):
         try:
             res = shows_db.get_show_by_api_id(api_name, api_id)
             api_res = tvmaze_api.get_show(api_id)
+            del api_res["id"]  # Conflict between moshan ID and tvmaze id
             ep_count = tvmaze_api.get_show_episodes_count(api_id)
             res = {**res, **api_res, **ep_count}
             return {

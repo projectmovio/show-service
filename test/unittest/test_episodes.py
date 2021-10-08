@@ -180,7 +180,8 @@ class TestGet:
 
     def test_success(self, mocked_shows_db, mocked_episodes_db):
         exp_res = {
-            "id": "123"
+            "id": "123",
+            "tvmaze_id": "1",
         }
         mocked_episodes_db.table.query.return_value = {
             "Items": [
@@ -190,12 +191,12 @@ class TestGet:
         }
 
         res = handle(self.event, None)
+        res_body = json.loads(res["body"])
 
-        exp = {
-            "statusCode": 200,
-            "body": json.dumps(exp_res)
-        }
-        assert res == exp
+        assert res["statusCode"] == 200
+        assert res_body["id"] == exp_res["id"]
+        assert res_body["tvmaze_id"] == exp_res["tvmaze_id"]
+        assert res_body["name"] == "Pilot"  # From real tvmaze api
 
     def test_not_found(self, mocked_shows_db, mocked_episodes_db):
         mocked_episodes_db.table.query.side_effect = mocked_episodes_db.NotFoundError

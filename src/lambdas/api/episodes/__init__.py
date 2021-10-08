@@ -123,6 +123,7 @@ def _get_episode_by_api_id(query_params):
         try:
             res = episodes_db.get_episode_by_api_id(api_name, api_id)
             api_res = tvmaze_api.get_episode(res["tvmaze_id"])
+            del api_res["id"]
             res = {**res, **api_res}
             return {
                 "statusCode": 200,

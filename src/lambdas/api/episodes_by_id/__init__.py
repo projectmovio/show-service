@@ -22,9 +22,10 @@ def handle(event, context):
     try:
         res = episodes_db.get_episode_by_id(show_id, episode_id)
 
-        if "api_name" in query_params:
+        if query_params is not None and "api_name" in query_params:
             if query_params["api_name"] == "tvmaze" and "tvmaze_id" in res:
                 api_res = tvmaze_api.get_episode(res["tvmaze_id"])
+                del api_res["id"]
                 res = {**res, **api_res}
     except (episodes_db.NotFoundError, episodes_db.InvalidAmountOfEpisodes):
         return {"statusCode": 404}
