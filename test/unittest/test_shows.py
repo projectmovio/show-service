@@ -35,29 +35,31 @@ class TestPost:
         mocked_shows_db.table.query.side_effect = mocked_shows_db.NotFoundError
 
         res = handle(self.event, None)
+        res_body = json.loads(res["body"])
 
-        exp = {
-            "body": json.dumps({"id": "cf1ffb71-48c3-53c0-9966-900cc5e5553e"}),
-            "statusCode": 200
-        }
-        assert res == exp
+        assert res["statusCode"] == 200
+        assert res_body["id"] == "cf1ffb71-48c3-53c0-9966-900cc5e5553e"
+        assert res_body["tvmaze_id"] == "123"
+        assert res_body["name"] == "Lost"  # From real tvmaze api
 
     def test_already_exist(self, mocked_shows_db):
         mocked_shows_db.table.query.return_value = {
             "Items": [
                 {
-                    "tvmaze_id": "123"
+                    "tvmaze_id": "123",
+                    "id": "cf1ffb71-48c3-53c0-9966-900cc5e5553e",
                 }
             ]
         }
 
         res = handle(self.event, None)
 
-        exp = {
-            "body": json.dumps({"id": "cf1ffb71-48c3-53c0-9966-900cc5e5553e"}),
-            "statusCode": 200
-        }
-        assert res == exp
+        res_body = json.loads(res["body"])
+
+        assert res["statusCode"] == 200
+        assert res_body["id"] == "cf1ffb71-48c3-53c0-9966-900cc5e5553e"
+        assert res_body["tvmaze_id"] == "123"
+        assert res_body["name"] == "Lost"  # From real tvmaze api
 
     def test_no_body(self, mocked_shows_db):
         mocked_shows_db.table.query.return_value = {
