@@ -32,7 +32,7 @@ class TestPost:
     }
 
     def test_success(self, mocked_shows_db):
-        mocked_shows_db.table.query.side_effect = mocked_shows_db.NotFoundError
+        mocked_shows_db.table.query.return_value = {"Items": []}
 
         res = handle(self.event, None)
         res_body = json.loads(res["body"])

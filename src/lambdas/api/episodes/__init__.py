@@ -79,21 +79,30 @@ def _post_episode(path_params, body):
 
 def _post_tvmaze(show_id, tvmaze_id):
     try:
-        episodes_db.get_episode_by_api_id("tvmaze", int(tvmaze_id))
+        api_res = tvmaze_api.get_episode(tvmaze_id)
+        del api_res["id"]
+    except tvmaze_api.HTTPError:
+        return {
+            "statusCode": 404
+        }
+
+    try:
+        res = episodes_db.get_episode_by_api_id("tvmaze", int(tvmaze_id))
     except episodes_db.NotFoundError:
-        pass
+        episodes_db.new_episode(show_id, "tvmaze", int(tvmaze_id))
+        res = {
+            "tvmaze_id": tvmaze_id,
+            "id": episodes_db.create_episode_uuid(show_id, tvmaze_id)
+        }
     else:
         return {
             "statusCode": 200,
-            "body": json.dumps(
-                {"id": episodes_db.create_episode_uuid(show_id, tvmaze_id)})
+            "body": json.dumps({**res, **api_res}),
         }
-
-    episode_id = episodes_db.new_episode(show_id, "tvmaze", int(tvmaze_id))
 
     return {
         "statusCode": 200,
-        "body": json.dumps({"id": episode_id})
+        "body": json.dumps({**res, **api_res}),
     }
 
 
