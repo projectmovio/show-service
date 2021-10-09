@@ -6,7 +6,7 @@ import decimal_encoder
 import logger
 import schema
 import shows_db
-from tvmaze import TvMazeApi
+import tvmaze
 
 sqs_queue = None
 
@@ -15,7 +15,7 @@ log = logger.get_logger("show")
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 POST_SCHEMA_PATH = os.path.join(CURRENT_DIR, "post.json")
 
-tvmaze_api = TvMazeApi()
+tvmaze_api = tvmaze.TvMazeApi()
 
 
 class Error(Exception):
@@ -71,9 +71,9 @@ def _post_tvmaze(tvmaze_id):
         api_res = tvmaze_api.get_show(tvmaze_id)
         del api_res["id"]
         ep_count = tvmaze_api.get_show_episodes_count(tvmaze_id)
-    except tvmaze_api.HTTPError:
+    except tvmaze.HTTPError as e:
         return {
-            "statusCode": 404
+            "statusCode": e.code
         }
 
     try:
@@ -131,6 +131,8 @@ def _get_show_by_api_id(query_params):
             }
         except shows_db.NotFoundError:
             return {"statusCode": 404}
+        except tvmaze.HTTPError as e:
+            return {"statusCode": e.code}
     else:
         return {
             "statusCode": 400,

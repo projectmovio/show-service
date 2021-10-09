@@ -3,9 +3,11 @@ import json
 import shows_db
 import decimal_encoder
 import logger
-from api.shows import tvmaze_api
+import tvmaze
 
 log = logger.get_logger("show_by_id")
+
+tvmaze_api = tvmaze.TvMazeApi()
 
 
 class HttpError(object):
@@ -29,6 +31,8 @@ def handle(event, context):
 
     except shows_db.NotFoundError:
         return {"statusCode": 404}
+    except tvmaze.HTTPError as e:
+        return {"statusCode": e.code}
 
     return {
         "statusCode": 200,
