@@ -76,6 +76,7 @@ class Shows(core.Stack):
         self.show_updates_topic = Topic(
             self,
             "shows_updates",
+            topic_name="shows-updates",
         )
 
     def _create_lambdas_config(self):
