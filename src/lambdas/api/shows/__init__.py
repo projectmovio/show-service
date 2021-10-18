@@ -6,7 +6,7 @@ import decimal_encoder
 import logger
 import schema
 import shows_db
-from tvmaze import TvMazeApi
+import tvmaze
 
 sqs_queue = None
 
@@ -15,7 +15,7 @@ log = logger.get_logger("show")
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 POST_SCHEMA_PATH = os.path.join(CURRENT_DIR, "post.json")
 
-tvmaze_api = TvMazeApi()
+tvmaze_api = tvmaze.TvMazeApi()
 
 
 class Error(Exception):
@@ -68,22 +68,31 @@ def _post_show(body):
 
 def _post_tvmaze(tvmaze_id):
     try:
-        shows_db.get_show_by_api_id("tvmaze", int(tvmaze_id))
+        api_res = tvmaze_api.get_show(tvmaze_id)
+        del api_res["id"]
+        ep_count = tvmaze_api.get_show_episodes_count(tvmaze_id)
+    except tvmaze.HTTPError as e:
+        return {
+            "statusCode": e.code
+        }
+
+    try:
+        res = shows_db.get_show_by_api_id("tvmaze", int(tvmaze_id))
     except shows_db.NotFoundError:
-        pass
+        shows_db.new_show("tvmaze", int(tvmaze_id))
+        res = {
+            "tvmaze_id": tvmaze_id,
+            "id": shows_db.create_show_uuid("tvmaze", tvmaze_id)
+        }
     else:
         return {
             "statusCode": 200,
-            "body": json.dumps(
-                {"id": shows_db.create_show_uuid("tvmaze", tvmaze_id)})
+            "body": json.dumps({**res, **api_res, **ep_count}),
         }
-
-    shows_db.new_show("tvmaze", int(tvmaze_id))
 
     return {
         "statusCode": 200,
-        "body": json.dumps(
-            {"id": shows_db.create_show_uuid("tvmaze", tvmaze_id)})
+        "body": json.dumps({**res, **api_res, **ep_count}),
     }
 
 
@@ -112,14 +121,18 @@ def _get_show_by_api_id(query_params):
     if api_name in ["tvmaze"]:
         try:
             res = shows_db.get_show_by_api_id(api_name, api_id)
-            api_res = tvmaze_api.get_show_episodes_count(api_id)
-            res = {**res, **api_res}
+            api_res = tvmaze_api.get_show(api_id)
+            del api_res["id"]  # Conflict between moshan ID and tvmaze id
+            ep_count = tvmaze_api.get_show_episodes_count(api_id)
+            res = {**res, **api_res, **ep_count}
             return {
                 "statusCode": 200,
                 "body": json.dumps(res, cls=decimal_encoder.DecimalEncoder)
             }
         except shows_db.NotFoundError:
             return {"statusCode": 404}
+        except tvmaze.HTTPError as e:
+            return {"statusCode": e.code}
     else:
         return {
             "statusCode": 400,

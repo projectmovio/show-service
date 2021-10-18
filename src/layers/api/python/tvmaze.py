@@ -10,8 +10,11 @@ class Error(Exception):
 
 
 class HTTPError(Error):
-    pass
 
+    def __init__(self, code):
+        Error.__init__(self, f"Unexpected status code: {code}")
+        self.code = code
+    
 
 class TvMazeApi:
     def __init__(self):
@@ -19,10 +22,24 @@ class TvMazeApi:
 
         log.debug("TvMazeApi base_url: {}".format(self.base_url))
 
+    def get_show(self, show_id):
+        res = requests.get(f"{self.base_url}/shows/{show_id}")
+
+        if res.status_code != 200:
+            raise HTTPError(res.status_code)
+        return res.json()
+
+    def get_episode(self, episode_id):
+        res = requests.get(f"{self.base_url}/episodes/{episode_id}")
+
+        if res.status_code != 200:
+            raise HTTPError(res.status_code)
+        return res.json()
+
     def get_day_updates(self):
         res = requests.get(f"{self.base_url}/updates/shows?since=day")
         if res.status_code != 200:
-            raise HTTPError(f"Unexpected status code: {res.status_code}")
+            raise HTTPError(res.status_code)
         return res.json()
 
     def get_show_episodes(self, show_id):
@@ -31,7 +48,7 @@ class TvMazeApi:
         )
 
         if res.status_code != 200:
-            raise HTTPError(f"Unexpected status code: {res.status_code}")
+            raise HTTPError(res.status_code)
         return res.json()
 
     def get_show_episodes_count(self, show_id):
