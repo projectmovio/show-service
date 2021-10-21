@@ -163,7 +163,7 @@ class Shows(core.Stack):
             "cron-update_eps": {
                 "layers": ["utils", "databases", "api", "publishers"],
                 "variables": {
-                    "SHOWS_DATABASE_NAME": self.episodes_table.table_name,
+                    "SHOWS_DATABASE_NAME": self.shows_table.table_name,
                     "LOG_LEVEL": "INFO",
                     "UPDATES_TOPIC_ARN": self.show_updates_topic.topic_arn,
                 },
