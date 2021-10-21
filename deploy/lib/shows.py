@@ -170,7 +170,7 @@ class Shows(core.Stack):
                 "policies": [
                     PolicyStatement(
                         actions=["dynamodb:Query"],
-                        resources=[f"{self.episodes_table.table_arn}/index/tvmaze_id"],
+                        resources=[f"{self.shows_table.table_arn}/index/tvmaze_id"],
                     ),
                     PolicyStatement(
                         actions=["sns:Publish"],
