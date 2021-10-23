@@ -83,6 +83,7 @@ def _post_tvmaze(show_id, tvmaze_id):
     try:
         api_res = tvmaze_api.get_episode(tvmaze_id)
         del api_res["id"]
+        api_res["is_special"] = api_res["type"] != "regular"
     except tvmaze.HTTPError as e:
         return {
             "statusCode": e.code
@@ -135,6 +136,8 @@ def _get_episode_by_api_id(query_params):
             res = episodes_db.get_episode_by_api_id(api_name, api_id)
             api_res = tvmaze_api.get_episode(res["tvmaze_id"])
             del api_res["id"]
+            api_res["is_special"] = api_res["type"] != "regular"
+
             res = {**res, **api_res}
             return {
                 "statusCode": 200,
