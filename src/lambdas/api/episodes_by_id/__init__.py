@@ -28,6 +28,8 @@ def handle(event, context):
             if query_params["api_name"] == "tvmaze" and "tvmaze_id" in res:
                 api_res = tvmaze_api.get_episode(res["tvmaze_id"])
                 del api_res["id"]
+                api_res["is_special"] = api_res["type"] != "regular"
+
                 res = {**res, **api_res}
     except (episodes_db.NotFoundError, episodes_db.InvalidAmountOfEpisodes):
         return {"statusCode": 404}
