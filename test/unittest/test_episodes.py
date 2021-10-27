@@ -49,8 +49,8 @@ class TestPost:
 
         assert res["statusCode"] == 200
         assert res_body["id"] == "20e10800-b2e2-5079-90b5-243647854ef2"
-        assert res_body["tvmaze_id"] == "456"
-        assert res_body["name"] == "The Waking Dead"  # From real tvmaze api
+        assert res_body["tvmaze_data"]["id"] == 456
+        assert res_body["tvmaze_data"]["name"] == "The Waking Dead"
 
     def test_already_exist(self, mocked_shows_db, mocked_episodes_db):
         mocked_episodes_db.table.query.return_value = {
@@ -73,8 +73,8 @@ class TestPost:
 
         assert res["statusCode"] == 200
         assert res_body["id"] == "20e10800-b2e2-5079-90b5-243647854ef2"
-        assert res_body["tvmaze_id"] == "456"
-        assert res_body["name"] == "The Waking Dead"  # From real tvmaze api
+        assert res_body["tvmaze_data"]["id"] == 456
+        assert res_body["tvmaze_data"]["name"] == "The Waking Dead"  # From real tvmaze api
 
     def test_no_body(self, mocked_shows_db, mocked_episodes_db):
         mocked_episodes_db.table.query.return_value = {
@@ -182,7 +182,7 @@ class TestGet:
     def test_success(self, mocked_shows_db, mocked_episodes_db):
         exp_res = {
             "id": "123",
-            "tvmaze_id": "1",
+            "tvmaze_id": 456,
         }
         mocked_episodes_db.table.query.return_value = {
             "Items": [
@@ -196,8 +196,8 @@ class TestGet:
 
         assert res["statusCode"] == 200
         assert res_body["id"] == exp_res["id"]
-        assert res_body["tvmaze_id"] == exp_res["tvmaze_id"]
-        assert res_body["name"] == "Pilot"  # From real tvmaze api
+        assert res_body["tvmaze_data"]["id"]  == exp_res["tvmaze_id"]
+        assert res_body["tvmaze_data"]["name"] == "The Waking Dead"  # From real tvmaze api
 
     def test_not_found(self, mocked_shows_db, mocked_episodes_db):
         mocked_episodes_db.table.query.side_effect = mocked_episodes_db.NotFoundError

@@ -82,7 +82,6 @@ def _post_episode(path_params, body):
 def _post_tvmaze(show_id, tvmaze_id):
     try:
         api_res = tvmaze_api.get_episode(tvmaze_id)
-        del api_res["id"]
         api_res["is_special"] = api_res["type"] != "regular"
     except tvmaze.HTTPError as e:
         return {
@@ -100,12 +99,12 @@ def _post_tvmaze(show_id, tvmaze_id):
     else:
         return {
             "statusCode": 200,
-            "body": json.dumps({**res, **api_res}, cls=decimal_encoder.DecimalEncoder),
+            "body": json.dumps({**res, "tvmaze_data": { **api_res }}, cls=decimal_encoder.DecimalEncoder),
         }
 
     return {
         "statusCode": 200,
-        "body": json.dumps({**res, **api_res}, cls=decimal_encoder.DecimalEncoder),
+        "body": json.dumps({**res, "tvmaze_data": { **api_res }}, cls=decimal_encoder.DecimalEncoder),
     }
 
 
@@ -135,10 +134,9 @@ def _get_episode_by_api_id(query_params):
         try:
             res = episodes_db.get_episode_by_api_id(api_name, api_id)
             api_res = tvmaze_api.get_episode(res["tvmaze_id"])
-            del api_res["id"]
             api_res["is_special"] = api_res["type"] != "regular"
 
-            res = {**res, **api_res}
+            res = {**res, "tvmaze_data": {**api_res}}
             return {
                 "statusCode": 200,
                 "body": json.dumps(res, cls=decimal_encoder.DecimalEncoder)
