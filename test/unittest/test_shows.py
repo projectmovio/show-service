@@ -123,7 +123,7 @@ class TestGet:
             "id": 123,
             "ep_count": 121,
             "special_count": 29,
-            "tvmaze_id": "1111"
+            "tvmaze_id": 1111
         }
         mocked_shows_db.table.query.return_value = {
             "Items": [
@@ -136,8 +136,8 @@ class TestGet:
 
         assert res["statusCode"] == 200
         assert res_body["id"] == exp_res["id"]
-        assert res_body["tvmaze_id"] == exp_res["tvmaze_id"]
-        assert res_body["name"] == "Lost"  # From real tvmaze api
+        assert res_body["tvmaze_data"]["id"] == 123
+        assert res_body["tvmaze_data"]["name"] == "Lost"  # From real tvmaze api
 
     def test_not_found(self, mocked_shows_db):
         mocked_shows_db.table.query.side_effect = mocked_shows_db.NotFoundError
