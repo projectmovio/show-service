@@ -27,7 +27,7 @@ def handle(event, context):
             if query_params["api_name"] == "tvmaze" and "tvmaze_id" in res:
                 api_res = tvmaze_api.get_show(res["tvmaze_id"])
                 ep_count = tvmaze_api.get_show_episodes_count(res["tvmaze_id"])
-                res = {**res, **api_res, **ep_count}
+                res = {**res, **ep_count, "tvmaze_data": {**api_res}}
 
     except shows_db.NotFoundError:
         return {"statusCode": 404}
