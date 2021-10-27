@@ -86,12 +86,12 @@ def _post_tvmaze(tvmaze_id):
     else:
         return {
             "statusCode": 200,
-            "body": json.dumps({**res, **api_res, **ep_count}, cls=decimal_encoder.DecimalEncoder),
+            "body": json.dumps({**res, **ep_count, "tvmaze_data": { **api_res }}, cls=decimal_encoder.DecimalEncoder),
         }
 
     return {
         "statusCode": 200,
-        "body": json.dumps({**res, **api_res, **ep_count}, cls=decimal_encoder.DecimalEncoder),
+        "body": json.dumps({**res, **ep_count, "tvmaze_data": { **api_res }}, cls=decimal_encoder.DecimalEncoder),
     }
 
 
