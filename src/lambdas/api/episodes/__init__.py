@@ -136,7 +136,7 @@ def _get_episode_by_api_id(query_params):
             api_res = tvmaze_api.get_episode(res["tvmaze_id"])
             api_res["is_special"] = api_res["type"] != "regular"
 
-            res = {**res, **api_res}
+            res = {**res, "tvmaze_data": {**api_res}}
             return {
                 "statusCode": 200,
                 "body": json.dumps(res, cls=decimal_encoder.DecimalEncoder)

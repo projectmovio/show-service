@@ -39,8 +39,8 @@ class TestPost:
 
         assert res["statusCode"] == 200
         assert res_body["id"] == "cf1ffb71-48c3-53c0-9966-900cc5e5553e"
-        assert res_body["tvmaze_id"] == "123"
-        assert res_body["name"] == "Lost"  # From real tvmaze api
+        assert res_body["tvmaze_data"]["id"] == 123
+        assert res_body["tvmaze_data"]["name"] == "Lost"  # From real tvmaze api
         assert res_body["ep_count"] == 121
         assert res_body["special_count"] == 29
 
@@ -60,8 +60,8 @@ class TestPost:
 
         assert res["statusCode"] == 200
         assert res_body["id"] == "cf1ffb71-48c3-53c0-9966-900cc5e5553e"
-        assert res_body["tvmaze_id"] == "123"
-        assert res_body["name"] == "Lost"  # From real tvmaze api
+        assert res_body["tvmaze_data"]["id"] == 123
+        assert res_body["tvmaze_data"]["name"] == "Lost"  # From real tvmaze api
         assert res_body["ep_count"] == 121
         assert res_body["special_count"] == 29
 
@@ -120,7 +120,7 @@ class TestGet:
 
     def test_success(self, mocked_shows_db):
         exp_res = {
-            "id": "123",
+            "id": 123,
             "ep_count": 121,
             "special_count": 29,
             "tvmaze_id": "1111"
